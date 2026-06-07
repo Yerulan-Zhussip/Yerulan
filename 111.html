@@ -1,114 +1,114 @@
-<!DOCTYPE html> 
-<html lang="ru"> 
-<head> 
-    <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"> 
-    <title>Mercury Energy | SmartME</title> 
-    <script src="https://cdn.tailwindcss.com"></script> 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet"> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script> 
-    <style> 
-        * { font-family: 'Inter', sans-serif; } 
-        body { 
-            background: radial-gradient(circle at 10% 20%, rgba(10, 20, 35, 1) 0%, rgba(0, 5, 15, 1) 100%); 
-            min-height: 100vh; 
-        } 
-        .glass-card { 
-            background: rgba(20, 30, 45, 0.5); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255,255,255,0.15); 
-            border-radius: 2rem; 
-            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.2); 
-        } 
-        .glass-panel { 
-            background: rgba(15, 25, 40, 0.6); 
-            backdrop-filter: blur(14px); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 1.5rem; 
-        } 
-        .bento-card { 
-            transition: all 0.2s ease-out; 
-        } 
-        .bento-card:hover { 
-            transform: translateY(-4px); 
-            background: rgba(30, 45, 65, 0.7); 
-            border-color: rgba(255,255,255,0.3); 
-        } 
-        .nav-btn, .primary-btn { 
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1); 
-        } 
-        .nav-btn:active, .primary-btn:active { 
-            transform: scale(0.96); 
-        } 
-        .page { 
-            animation: fadeSlideUp 0.35s ease-out; 
-        } 
-        @keyframes fadeSlideUp { 
-            from { opacity: 0; transform: translateY(12px);} 
-            to { opacity: 1; transform: translateY(0);} 
-        } 
-        .news-carousel { 
-            scroll-behavior: smooth; 
-            -webkit-overflow-scrolling: touch; 
-            scrollbar-width: thin; 
-        } 
-        .news-carousel::-webkit-scrollbar { 
-            height: 6px; 
-        } 
-        .news-carousel::-webkit-scrollbar-track { 
-            background: rgba(255,255,255,0.1); 
-            border-radius: 10px; 
-        } 
-        .news-carousel::-webkit-scrollbar-thumb { 
-            background: rgba(100,150,255,0.5); 
-            border-radius: 10px; 
-        } 
-        .tank { 
-            transition: all 0.3s ease; 
-            cursor: pointer; 
-        } 
-        .tank:hover { 
-            transform: translateY(-5px); 
-        } 
-        .fuel-fill { 
-            transition: height 0.5s ease-out; 
-        } 
-        input:focus { 
-            outline: none; 
-            border-color: #3b82f6; 
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.2); 
-        } 
-        .gradient-text { 
-            background: linear-gradient(135deg, #ffffff 0%, #60a5fa 50%, #a78bfa 100%); 
-            -webkit-background-clip: text; 
-            background-clip: text; 
-            color: transparent; 
-        } 
-        .home-btn { 
-            background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2)); 
-            border: 1px solid rgba(59,130,246,0.3); 
-        } 
-        .home-btn:hover { 
-            background: linear-gradient(135deg, rgba(59,130,246,0.4), rgba(139,92,246,0.4)); 
-            border-color: rgba(59,130,246,0.6); 
-        } 
-        .small-nav-btn { 
-            background: rgba(20, 30, 45, 0.6); 
-            backdrop-filter: blur(8px); 
-            border: 1px solid rgba(255,255,255,0.15); 
-            transition: all 0.2s; 
-        } 
-        .small-nav-btn:hover { 
-            background: rgba(59,130,246,0.3); 
-            border-color: rgba(59,130,246,0.5); 
-            transform: translateY(-2px); 
-        } 
-        .hero-bg { 
-            background-image: url('https://mercuryenergy.kz/11.jpg'); 
-            background-size: cover; 
-            background-position: center; 
-        } 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Mercury Energy | SmartME</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body {
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.05);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 1.5rem;
+        }
+        .bento-card {
+            transition: all 0.2s ease-out;
+        }
+        .bento-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(0,0,0,0.1);
+        }
+        .nav-btn, .primary-btn {
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .nav-btn:active, .primary-btn:active {
+            transform: scale(0.96);
+        }
+        .page {
+            animation: fadeSlideUp 0.35s ease-out;
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(12px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .news-carousel {
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+        .news-carousel::-webkit-scrollbar {
+            height: 6px;
+        }
+        .news-carousel::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 10px;
+        }
+        .news-carousel::-webkit-scrollbar-thumb {
+            background: rgba(59,130,246,0.3);
+            border-radius: 10px;
+        }
+        .tank {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .tank:hover {
+            transform: translateY(-5px);
+        }
+        .fuel-fill {
+            transition: height 0.5s ease-out;
+        }
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #1e293b 0%, #3b82f6 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .home-btn {
+            background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2));
+            border: 1px solid rgba(59,130,246,0.3);
+        }
+        .home-btn:hover {
+            background: linear-gradient(135deg, rgba(59,130,246,0.4), rgba(139,92,246,0.4));
+            border-color: rgba(59,130,246,0.6);
+        }
+        .small-nav-btn {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        .small-nav-btn:hover {
+            background: rgba(59,130,246,0.3);
+            border-color: rgba(59,130,246,0.5);
+            transform: translateY(-2px);
+        }
+        .hero-bg {
+            background-image: url('https://mercuryenergy.kz/11.jpg');
+            background-size: cover;
+            background-position: center;
+        }
         .news-slider {
             display: flex;
             overflow-x: auto;
@@ -126,104 +126,100 @@
         }
         @media (min-width: 768px) {
             .news-slide {
-                flex: 0 0 40%;
+                flex: 0 0 31%;
             }
         }
-        /* Стили для графиков */ 
-        .chart-container canvas { 
-            max-height: 250px; 
-            width: 100%; 
-        } 
-    </style> 
-</head> 
-<body class="text-white antialiased"> 
- 
-<div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 relative"> 
-     
-    <!-- Header --> 
-    <header class="flex justify-between items-center mb-6 z-30 relative flex-wrap gap-3"> 
-        <div class="flex items-center gap-3"> 
-            <button id="hamburgerBtn" class="relative z-50 w-10 h-10 flex flex-col justify-center items-center gap-1.5 rounded-full glass-card hover:bg-white/10 nav-btn"> 
-                <span class="hamburger-line block w-5 h-0.5 bg-white rounded-full"></span> 
-                <span class="hamburger-line block w-5 h-0.5 bg-white rounded-full"></span> 
-                <span class="hamburger-line block w-5 h-0.5 bg-white rounded-full"></span> 
-            </button> 
-            <div class="text-2xl font-bold tracking-tight"> 
-                <span class="gradient-text">Mercury</span> 
-            </div> 
-            <div class="hidden md:block text-xs text-gray-400 ml-1">| SmartME</div> 
-        </div> 
-         
-        <!-- Компактные кнопки навигации в хедере (рядом с "На главную") --> 
-        <div class="flex items-center gap-2 flex-wrap"> 
-            <!-- КНОПКА "НА ГЛАВНУЮ" --> 
-            <button id="homeButton" class="home-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-btn"> 
-                <i class="fas fa-home text-xs"></i> 
-                <span>Главная</span> 
-            </button> 
-             
-            <!-- Маленькие кнопки: О компании, Цены, АЗС/Нефтебаза --> 
-            <button data-nav="about" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn"> 
-                <i class="fas fa-building text-xs"></i> 
-                <span class="hidden sm:inline">О компании</span> 
-            </button> 
-            <button data-nav="prices" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn"> 
-                <i class="fas fa-tags text-xs"></i> 
-                <span class="hidden sm:inline">Цены</span> 
-            </button> 
-            <button data-nav="tanks" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn"> 
-                <i class="fas fa-oil-can text-xs"></i> 
-                <span class="hidden sm:inline">АЗС / Нефтебаза</span> 
-            </button> 
-             
-            <!-- Основной сайт (иконка) --> 
-            <a href="https://mercuryenergy.kz" target="_blank" rel="noopener noreferrer"  
-               class="flex items-center gap-1 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border border-white/20 hover:bg-white/20 transition-all nav-btn"> 
-                <i class="fas fa-external-link-alt text-xs"></i> 
-                <span class="hidden sm:inline">Сайт</span> 
-            </a> 
-        </div> 
-    </header> 
- 
-    <!-- Menu Overlay --> 
-    <div id="menuOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-md z-40 transition-all duration-300 transform -translate-x-full"> 
-        <div class="w-72 h-full bg-gradient-to-b from-gray-900/95 to-gray-950/95 backdrop-blur-xl border-r border-white/10 p-6 flex flex-col gap-6 shadow-2xl"> 
-            <div class="flex justify-between items-center mb-4"> 
-                <div class="text-2xl font-bold gradient-text">Mercury Energy</div> 
-                <button id="closeMenuBtn" class="text-white/60 hover:text-white text-2xl">&times;</button> 
-            </div> 
-            <nav class="flex flex-col gap-3 text-base"> 
-                <a href="#" data-nav="home" class="menu-link py-2.5 px-4 rounded-xl hover:bg-white/10 transition flex items-center gap-3"> 
-                    <i class="fas fa-home w-5"></i> Главная 
-                </a> 
-                <a href="#" data-nav="tanks" class="menu-link py-2.5 px-4 rounded-xl hover:bg-white/10 transition flex items-center gap-3"> 
-                    <i class="fas fa-oil-can w-5"></i> АЗС / Нефтебаза 
-                </a> 
-                <a href="#" data-nav="about" class="menu-link py-2.5 px-4 rounded-xl hover:bg-white/10 transition flex items-center gap-3"> 
-                    <i class="fas fa-building w-5"></i> О компании 
-                </a> 
-                <a href="#" data-nav="news" class="menu-link py-2.5 px-4 rounded-xl hover:bg-white/10 transition flex items-center gap-3"> 
-                    <i class="fas fa-newspaper w-5"></i> Новости 
-                </a> 
-                <a href="#" data-nav="prices" class="menu-link py-2.5 px-4 rounded-xl hover:bg-white/10 transition flex items-center gap-3"> 
-                    <i class="fas fa-tags w-5"></i> Цены 
-                </a> 
-                <a href="#" data-nav="contacts" class="menu-link py-2.5 px-4 rounded-xl hover:bg-white/10 transition flex items-center gap-3"> 
-                    <i class="fas fa-phone w-5"></i> Контакты 
-                </a> 
-                <hr class="border-white/10 my-2"> 
-                <a href="https://mercuryenergy.kz" target="_blank" class="py-2.5 px-4 rounded-xl hover:bg-white/10 transition flex items-center gap-3"> 
-                    <i class="fas fa-globe w-5"></i> mercuryenergy.kz → 
-                </a> 
-            </nav> 
-        </div> 
-    </div> 
- 
-    <!-- Dynamic Content --> 
-    <main id="pageContent" class="page"></main> 
-</div> 
- 
-<script> 
+        /* Стили для графиков */
+        .chart-container canvas {
+            max-height: 250px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="text-slate-900 antialiased">
+
+<div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 relative">
+
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-6 z-30 relative flex-wrap gap-3">
+        <div class="flex items-center gap-3">
+            <button id="hamburgerBtn" class="relative z-50 w-10 h-10 flex flex-col justify-center items-center gap-1.5 rounded-full glass-card hover:bg-black/5 nav-btn">
+                <span class="hamburger-line block w-5 h-0.5 bg-slate-900 rounded-full"></span>
+                <span class="hamburger-line block w-5 h-0.5 bg-slate-900 rounded-full"></span>
+                <span class="hamburger-line block w-5 h-0.5 bg-slate-900 rounded-full"></span>
+            </button>
+            <div class="text-2xl font-bold tracking-tight">
+                <span class="gradient-text">Mercury</span>
+            </div>
+            <div class="hidden md:block text-xs text-gray-400 ml-1">| SmartME</div>
+        </div>
+
+        <!-- Компактные кнопки навигации в хедере (рядом с "На главную") -->
+        <div class="flex items-center gap-2 flex-wrap">
+            <!-- КНОПКА "НА ГЛАВНУЮ" -->
+            <button id="homeButton" class="home-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-btn">
+                <i class="fas fa-home text-xs"></i>
+                <span>Главная</span>
+            </button>
+
+            <!-- Маленькие кнопки: О компании, Цены, АЗС/Нефтебаза -->
+            <button data-nav="about" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn">
+                <i class="fas fa-building text-xs"></i>
+                <span class="hidden sm:inline">О компании</span>
+            </button>
+            <button data-nav="tanks" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn">
+                <i class="fas fa-oil-can text-xs"></i>
+                <span class="hidden sm:inline">АЗС / Нефтебаза</span>
+            </button>
+
+            <!-- Основной сайт (иконка) -->
+            <a href="https://mercuryenergy.kz" target="_blank" rel="noopener noreferrer"
+               class="flex items-center gap-1 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border border-white/20 hover:bg-white/20 transition-all nav-btn">
+                <i class="fas fa-external-link-alt text-xs"></i>
+                <span class="hidden sm:inline">Сайт</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Menu Overlay -->
+    <div id="menuOverlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-40 transition-all duration-300 transform -translate-x-full">
+        <div class="w-72 h-full bg-white backdrop-blur-xl border-r border-gray-200 p-6 flex flex-col gap-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <div class="text-2xl font-bold gradient-text">Mercury Energy</div>
+                <button id="closeMenuBtn" class="text-slate-400 hover:text-slate-900 text-2xl">&times;</button>
+            </div>
+            <nav class="flex flex-col gap-3 text-base text-gray-800">
+                <a href="#" data-nav="home" class="menu-link py-2.5 px-4 rounded-xl hover:bg-gray-100 transition flex items-center gap-3">
+                    <i class="fas fa-home w-5"></i> Главная
+                </a>
+                <a href="#" data-nav="tanks" class="menu-link py-2.5 px-4 rounded-xl hover:bg-gray-100 transition flex items-center gap-3">
+                    <i class="fas fa-oil-can w-5"></i> АЗС / Нефтебаза
+                </a>
+                <a href="#" data-nav="about" class="menu-link py-2.5 px-4 rounded-xl hover:bg-gray-100 transition flex items-center gap-3">
+                    <i class="fas fa-building w-5"></i> О компании
+                </a>
+                <a href="#" data-nav="news" class="menu-link py-2.5 px-4 rounded-xl hover:bg-gray-100 transition flex items-center gap-3">
+                    <i class="fas fa-newspaper w-5"></i> Новости
+                </a>
+                <a href="#" data-nav="prices" class="menu-link py-2.5 px-4 rounded-xl hover:bg-gray-100 transition flex items-center gap-3">
+                    <i class="fas fa-tags w-5"></i> Цены
+                </a>
+                <a href="#" data-nav="contacts" class="menu-link py-2.5 px-4 rounded-xl hover:bg-gray-100 transition flex items-center gap-3">
+                    <i class="fas fa-phone w-5"></i> Контакты
+                </a>
+                <hr class="border-gray-100 my-2">
+                <a href="https://mercuryenergy.kz" target="_blank" class="py-2.5 px-4 rounded-xl hover:bg-gray-100 transition flex items-center gap-3">
+                    <i class="fas fa-globe w-5"></i> mercuryenergy.kz →
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Dynamic Content -->
+    <main id="pageContent" class="page"></main>
+</div>
+
+<script>
     // ========== HELPER FUNCTIONS ==========
     function combinations(n, k) {
         if (k < 0 || k > n) return 0;
@@ -240,478 +236,485 @@
         return combinations(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
     }
 
-    // ========== ДАННЫЕ ========== 
-    const newsArchive = [ 
-        { id: 1, title: "Модернизация нефтебазы JIG", content: "Поэтапная модернизация в соответствии с международными стандартами JIG 2 (issue 13, 2021).", date: "2025-04-20", trending: 92, img: "https://mercuryenergy.kz/upload/iblock/d7a/news.jpg" }, 
-        { id: 2, title: "Практика студентов КазНУ", content: "Студенты 4-го курса КазНУ им. Аль-Фараби успешно прошли практику на нефтебазе.", date: "2026-04-30", trending: 88, img: "https://mercuryenergy.kz/upload/iblock/d7a/KZNU.jpeg" }, 
-        { id: 3, title: "Меморандум с SCAT Airlines", content: "Соглашение о развитии инфраструктуры хранения авиатоплива и расширении сети поставок.", date: "2024-04-30", trending: 75, img: "https://mercuryenergy.kz/scat.jpeg" }, 
-        { id: 4, title: "Запуск Smart АЗС ION Energy", content: "Инновационный проект 'умных' АЗС на модульной основе с цифровыми решениями.", date: "2025-03-15", trending: 94, img: "https://mercuryenergy.kz/upload/iblock/4b9/AZSION2.png" } 
-    ]; 
-     
-    let currentPage = 'home'; 
-    let newsSortMode = 'newest'; 
-    let newsVisibleCount = 3; 
- 
-    function formatDate(dateStr) { 
-        const d = new Date(dateStr); 
-        return `${d.getDate()} ${['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'][d.getMonth()]} ${d.getFullYear()}`; 
-    } 
- 
-    function getSortedNews() { 
-        let arr = [...newsArchive]; 
-        if (newsSortMode === 'newest') arr.sort((a,b) => new Date(b.date) - new Date(a.date)); 
-        else if (newsSortMode === 'oldest') arr.sort((a,b) => new Date(a.date) - new Date(b.date)); 
-        else arr.sort((a,b) => b.trending - a.trending); 
-        return arr; 
-    } 
- 
-    // ========== ГЛАВНАЯ СТРАНИЦА (Укороченный заголовок, фон, новости снизу) ========== 
-    function renderHome() { 
-        return ` 
-            <div class="space-y-8"> 
-                <!-- ГЕРО-БЛОК с фоновым изображением и коротким текстом --> 
-                <div class="relative rounded-3xl overflow-hidden h-80 md:h-96 glass-card flex items-center justify-center hero-bg"> 
-                    <div class="absolute inset-0 bg-black/50 backdrop-blur-[1px]"></div> 
-                    <div class="relative z-10 text-center px-4 max-w-md mx-auto"> 
-                        <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-2">Mercury</h1> 
-                        <p class="text-gray-200 text-sm md:text-base italic mb-4">From the endless steppes to the eternal sky</p> 
-                        <div class="flex flex-wrap justify-center gap-2 text-[10px] sm:text-xs text-gray-200"> 
-                            <span class="bg-white/10 border border-white/20 px-3 py-1 rounded-full backdrop-blur-md">Нефтебаза в Алматы</span> 
-                            <span class="bg-white/10 border border-white/20 px-3 py-1 rounded-full backdrop-blur-md">Авиатопливо</span> 
-                            <span class="bg-white/10 border border-white/20 px-3 py-1 rounded-full backdrop-blur-md">Хранение 19 000 м³</span> 
-                        </div> 
-                    </div> 
-                </div> 
-                 
-                <!-- НОВОСТИ НА ГЛАВНОЙ (Карусель) --> 
-                <div class="glass-panel p-6 rounded-2xl overflow-hidden"> 
-                    <div class="flex justify-between items-center mb-6 flex-wrap gap-2"> 
-                        <h2 class="text-xl font-semibold"><i class="fas fa-newspaper text-blue-400 mr-2"></i>Свежие новости</h2> 
-                        <div class="flex gap-2">
-                             <button onclick="document.querySelector('.news-slider').scrollBy({left: -300, behavior: 'smooth'})" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"><i class="fas fa-chevron-left text-xs"></i></button>
-                             <button onclick="document.querySelector('.news-slider').scrollBy({left: 300, behavior: 'smooth'})" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"><i class="fas fa-chevron-right text-xs"></i></button>
+    // ========== ДАННЫЕ ==========
+    const newsArchive = [
+        { id: 1, title: "Модернизация нефтебазы JIG", content: "Поэтапная модернизация в соответствии с международными стандартами JIG 2 (issue 13, 2021).", date: "2025-04-20", trending: 92, img: "https://mercuryenergy.kz/upload/iblock/d7a/news.jpg" },
+        { id: 2, title: "Практика студентов КазНУ", content: "Студенты 4-го курса КазНУ им. Аль-Фараби успешно прошли практику на нефтебазе.", date: "2026-04-30", trending: 88, img: "https://mercuryenergy.kz/upload/iblock/d7a/KZNU.jpeg" },
+        { id: 3, title: "Меморандум с SCAT Airlines", content: "Соглашение о развитии инфраструктуры хранения авиатоплива и расширении сети поставок.", date: "2024-04-30", trending: 75, img: "https://mercuryenergy.kz/scat.jpeg" },
+        { id: 4, title: "Запуск Smart АЗС ION Energy", content: "Инновационный проект 'умных' АЗС на модульной основе с цифровыми решениями.", date: "2025-03-15", trending: 94, img: "https://mercuryenergy.kz/upload/iblock/4b9/AZSION2.png" }
+    ];
+
+    let currentPage = 'home';
+    let newsSortMode = 'newest';
+    let newsVisibleCount = 3;
+
+    function formatDate(dateStr) {
+        const d = new Date(dateStr);
+        return `${d.getDate()} ${['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'][d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    function getSortedNews() {
+        let arr = [...newsArchive];
+        if (newsSortMode === 'newest') arr.sort((a,b) => new Date(b.date) - new Date(a.date));
+        else if (newsSortMode === 'oldest') arr.sort((a,b) => new Date(a.date) - new Date(b.date));
+        else arr.sort((a,b) => b.trending - a.trending);
+        return arr;
+    }
+
+    // ========== ГЛАВНАЯ СТРАНИЦА (Укороченный заголовок, фон, новости снизу) ==========
+    function renderHome() {
+        return `
+            <div class="space-y-6">
+                <!-- ГЕРО-БЛОК с фоновым изображением и коротким текстом -->
+                <div class="relative rounded-3xl overflow-hidden h-40 md:h-48 glass-card flex items-center justify-center hero-bg">
+                    <div class="absolute inset-0 bg-white/20 backdrop-blur-[1px]"></div>
+                    <div class="relative z-10 text-center px-4 max-w-md mx-auto">
+                        <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-1">Mercury</h1>
+                        <p class="text-gray-800 text-[10px] md:text-xs italic mb-2">From the endless steppes to the eternal sky</p>
+                        <div class="flex flex-wrap justify-center gap-2 text-[8px] md:text-[10px] text-gray-700">
+                            <span class="bg-white/40 border border-black/5 px-2 py-0.5 rounded-full backdrop-blur-md">Нефтебаза в Алматы</span>
+                            <span class="bg-white/40 border border-black/5 px-2 py-0.5 rounded-full backdrop-blur-md">Авиатопливо</span>
+                            <span class="bg-white/40 border border-black/5 px-2 py-0.5 rounded-full backdrop-blur-md">Хранение 19 000 м³</span>
                         </div>
-                    </div> 
-                    <div class="news-slider"> 
-                        ${getSortedNews().map(item => ` 
-                            <div class="news-slide glass-card overflow-hidden bento-card relative group flex flex-col"> 
-                                <div class="h-40 overflow-hidden">
+                    </div>
+                </div>
+
+
+                <!-- ЦЕНЫ НА ГЛАВНОЙ -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="glass-panel p-3 text-center">
+                        <div class="text-[10px] text-gray-500 uppercase">АИ-92</div>
+                        <div class="text-lg font-bold text-blue-600">225 ₸</div>
+                    </div>
+                    <div class="glass-panel p-3 text-center">
+                        <div class="text-[10px] text-gray-500 uppercase">АИ-95</div>
+                        <div class="text-lg font-bold text-blue-600">235 ₸</div>
+                    </div>
+                    <div class="glass-panel p-3 text-center">
+                        <div class="text-[10px] text-gray-500 uppercase">ДТ</div>
+                        <div class="text-lg font-bold text-blue-600">285 ₸</div>
+                    </div>
+                </div>
+                <!-- НОВОСТИ НА ГЛАВНОЙ (Карусель) -->
+                <div class="glass-panel p-6 rounded-2xl overflow-hidden">
+                    <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
+                        <h2 class="text-xl font-semibold"><i class="fas fa-newspaper text-blue-400 mr-2"></i>Свежие новости</h2>
+                        <div class="flex gap-2">
+                             <button onclick="document.querySelector('.news-slider').scrollBy({left: -300, behavior: 'smooth'})" class="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center hover:bg-black/10 transition"><i class="fas fa-chevron-left text-xs text-slate-600"></i></button>
+                             <button onclick="document.querySelector('.news-slider').scrollBy({left: 300, behavior: 'smooth'})" class="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center hover:bg-black/10 transition"><i class="fas fa-chevron-right text-xs text-slate-600"></i></button>
+                        </div>
+                    </div>
+                    <div class="news-slider">
+                        ${getSortedNews().map(item => `
+                            <div class="news-slide glass-card overflow-hidden bento-card relative group flex flex-col">
+                                <div class="h-24 overflow-hidden">
                                     <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                 </div>
-                                <div class="p-5 flex flex-col flex-grow">
-                                    <div class="text-[10px] text-blue-400 font-bold mb-2 uppercase tracking-widest">${formatDate(item.date)}</div> 
-                                    <h3 class="font-bold text-lg mb-2 leading-tight group-hover:text-blue-300 transition-colors">${item.title}</h3> 
-                                    <p class="text-gray-400 text-sm line-clamp-2 mb-4">${item.content}</p> 
-                                    <button data-nav="news" class="mt-auto nav-page-btn text-xs text-blue-400 font-semibold flex items-center gap-2 hover:gap-3 transition-all">
-                                        Подробнее <i class="fas fa-arrow-right"></i>
+                                <div class="p-4 flex flex-col flex-grow">
+                                    <div class="text-[10px] text-blue-600 font-bold mb-1 uppercase tracking-widest">${formatDate(item.date)}</div>
+                                    <h3 class="font-bold text-sm mb-1 leading-tight group-hover:text-blue-600 transition-colors">${item.title}</h3>
+                                    <p class="text-gray-500 text-[11px] line-clamp-2 mb-2">${item.content}</p>
+                                    <button data-nav="news" class="mt-auto nav-page-btn text-[10px] text-blue-600 font-semibold flex items-center gap-1 hover:gap-2 transition-all">
+                                        Подробнее <i class="fas fa-arrow-right text-[8px]"></i>
                                     </button>
                                 </div>
-                            </div> 
-                        `).join('')} 
-                    </div> 
-                </div> 
-                 
-                <!-- Краткая информация о компании --> 
-                <div class="glass-panel p-6 rounded-2xl"> 
-                    <h2 class="text-xl font-semibold mb-3"><i class="fas fa-info-circle text-blue-400 mr-2"></i>О компании кратко</h2> 
-                    <p class="text-gray-300 text-sm leading-relaxed">Mercury Energy — ведущий поставщик авиатоплива в Казахстане. Наша нефтебаза в Алматы имеет объём хранения <strong class="text-blue-400">19 000 м³</strong>, соответствует стандартам <strong class="text-blue-400">JIG 2</strong>.</p> 
-                    <div class="grid grid-cols-3 gap-3 mt-4 text-center"> 
-                        <div><div class="text-xl font-bold text-blue-400">2018</div><div class="text-xs text-gray-500">год запуска</div></div> 
-                        <div><div class="text-xl font-bold text-blue-400">13</div><div class="text-xs text-gray-500">резервуаров</div></div> 
-                        <div><div class="text-xl font-bold text-blue-400">6 км</div><div class="text-xs text-gray-500">до аэропорта</div></div> 
-                    </div> 
-                </div> 
-            </div> 
-        `; 
-    } 
- 
-    // ========== СТРАНИЦА АЗС / НЕФТЕБАЗА ========== 
-    function renderTanksPage() { 
-        return ` 
-            <div class="space-y-8"> 
-                <div class="glass-panel p-6 rounded-2xl"> 
-                    <h2 class="text-2xl font-bold flex items-center gap-2"><i class="fas fa-warehouse text-blue-400"></i> Остатки топлива на нефтебазе</h2> 
-                    <p class="text-gray-400 text-sm mt-1">Актуальные данные: ${new Date().toLocaleDateString('ru-RU')}</p> 
-                </div> 
-                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5"> 
-                    <div class="tank glass-panel p-5 rounded-xl"> 
-                        <div class="flex justify-between mb-2"> 
-                            <span class="font-semibold"><i class="fas fa-droplet text-blue-400 mr-1"></i> Резервуар №1 (АИ-92)</span> 
-                            <span class="text-sm text-blue-300" id="fuel1Val">42 500</span> 
-                        </div> 
-                        <div class="h-28 bg-black/40 rounded-xl overflow-hidden relative"> 
-                            <div id="fill1" class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-500 to-blue-400 fuel-fill" style="height: 85%"></div> 
-                            <div class="absolute inset-0 flex items-center justify-center text-sm font-bold">85%</div> 
-                        </div> 
-                    </div> 
-                     
-                    <div class="tank glass-panel p-5 rounded-xl"> 
-                        <div class="flex justify-between mb-2"> 
-                            <span class="font-semibold"><i class="fas fa-droplet text-sky-400 mr-1"></i> Резервуар №2 (АИ-95)</span> 
-                            <span class="text-sm text-sky-300" id="fuel2Val">31 200</span> 
-                        </div> 
-                        <div class="h-28 bg-black/40 rounded-xl overflow-hidden relative"> 
-                            <div id="fill2" class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-sky-500 to-sky-400 fuel-fill" style="height: 62%"></div> 
-                            <div class="absolute inset-0 flex items-center justify-center text-sm font-bold">62%</div> 
-                        </div> 
-                    </div> 
-                     
-                    <div class="tank glass-panel p-5 rounded-xl"> 
-                        <div class="flex justify-between mb-2"> 
-                            <span class="font-semibold"><i class="fas fa-droplet text-emerald-400 mr-1"></i> Резервуар №3 (ДТ)</span> 
-                            <span class="text-sm text-emerald-300" id="fuel3Val">48 700</span> 
-                        </div> 
-                        <div class="h-28 bg-black/40 rounded-xl overflow-hidden relative"> 
-                            <div id="fill3" class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-emerald-500 to-emerald-400 fuel-fill" style="height: 81%"></div> 
-                            <div class="absolute inset-0 flex items-center justify-center text-sm font-bold">81%</div> 
-                        </div> 
-                    </div> 
-                     
-                    <div class="tank glass-panel p-5 rounded-xl"> 
-                        <div class="flex justify-between mb-2"> 
-                            <span class="font-semibold"><i class="fas fa-droplet text-purple-400 mr-1"></i> Резервуар №4 (АИ-98)</span> 
-                            <span class="text-sm text-purple-300" id="fuel4Val">18 600</span> 
-                        </div> 
-                        <div class="h-28 bg-black/40 rounded-xl overflow-hidden relative"> 
-                            <div id="fill4" class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-purple-500 to-purple-400 fuel-fill" style="height: 46%"></div> 
-                            <div class="absolute inset-0 flex items-center justify-center text-sm font-bold">46%</div> 
-                        </div> 
-                    </div> 
-                </div> 
-                 
-                <div class="glass-panel p-6 rounded-2xl"> 
-                    <h3 class="text-xl font-semibold mb-4"><i class="fas fa-calculator text-green-400 mr-2"></i>Бернулли үлестірімі (n, p)</h3> 
-                    <div class="grid md:grid-cols-2 gap-5 mb-6"> 
-                        <div> 
-                            <label class="block text-sm text-gray-300 mb-1">Сынақтар саны (n)</label> 
-                            <input type="number" id="bernoulliN" class="w-full bg-black/30 border border-white/15 rounded-xl px-4 py-2" value="10"> 
-                        </div> 
-                        <div> 
-                            <label class="block text-sm text-gray-300 mb-1">Табыс ықтималдығы (p)</label> 
-                            <input type="number" step="0.1" min="0" max="1" id="bernoulliP" class="w-full bg-black/30 border border-white/15 rounded-xl px-4 py-2" value="0.5"> 
-                        </div> 
-                    </div> 
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Краткая информация о компании -->
+            </div>
+        `;
+    }
+
+    // ========== СТРАНИЦА АЗС / НЕФТЕБАЗА ==========
+    function renderTanksPage() {
+        return `
+            <div class="space-y-8">
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h2 class="text-2xl font-bold flex items-center gap-2"><i class="fas fa-warehouse text-blue-600"></i> Остатки топлива на нефтебазе</h2>
+                    <p class="text-gray-500 text-sm mt-1">Актуальные данные: ${new Date().toLocaleDateString('ru-RU')}</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="tank glass-panel p-5 rounded-xl">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold text-slate-700"><i class="fas fa-droplet text-blue-600 mr-1"></i> Резервуар №1 (АИ-92)</span>
+                            <span class="text-sm font-bold text-blue-600" id="fuel1Val">42 500</span>
+                        </div>
+                        <div class="h-28 bg-slate-200/50 rounded-xl overflow-hidden relative">
+                            <div id="fill1" class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-600 to-blue-400 fuel-fill" style="height: 85%"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-700">85%</div>
+                        </div>
+                    </div>
+
+                    <div class="tank glass-panel p-5 rounded-xl">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold text-slate-700"><i class="fas fa-droplet text-sky-600 mr-1"></i> Резервуар №2 (АИ-95)</span>
+                            <span class="text-sm font-bold text-sky-600" id="fuel2Val">31 200</span>
+                        </div>
+                        <div class="h-28 bg-slate-200/50 rounded-xl overflow-hidden relative">
+                            <div id="fill2" class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-sky-600 to-sky-400 fuel-fill" style="height: 62%"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-700">62%</div>
+                        </div>
+                    </div>
+
+                    <div class="tank glass-panel p-5 rounded-xl">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold text-slate-700"><i class="fas fa-droplet text-emerald-600 mr-1"></i> Резервуар №3 (ДТ)</span>
+                            <span class="text-sm font-bold text-emerald-600" id="fuel3Val">48 700</span>
+                        </div>
+                        <div class="h-28 bg-slate-200/50 rounded-xl overflow-hidden relative">
+                            <div id="fill3" class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-emerald-600 to-emerald-400 fuel-fill" style="height: 81%"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-700">81%</div>
+                        </div>
+                    </div>
+
+                    <div class="tank glass-panel p-5 rounded-xl">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold text-slate-700"><i class="fas fa-droplet text-purple-600 mr-1"></i> Резервуар №4 (АИ-98)</span>
+                            <span class="text-sm font-bold text-purple-600" id="fuel4Val">18 600</span>
+                        </div>
+                        <div class="h-28 bg-slate-200/50 rounded-xl overflow-hidden relative">
+                            <div id="fill4" class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-purple-600 to-purple-400 fuel-fill" style="height: 46%"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-700">46%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h3 class="text-xl font-semibold mb-4 text-slate-800"><i class="fas fa-calculator text-green-600 mr-2"></i>Бернулли үлестірімі (n, p)</h3>
+                    <div class="grid md:grid-cols-2 gap-5 mb-6">
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Сынақтар саны (n)</label>
+                            <input type="number" id="bernoulliN" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2" value="10">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Табыс ықтималдығы (p)</label>
+                            <input type="number" step="0.1" min="0" max="1" id="bernoulliP" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2" value="0.5">
+                        </div>
+                    </div>
                     <div class="chart-container">
                         <canvas id="bernoulliChart" width="400" height="200"></canvas>
                     </div>
                     <div class="mt-4 text-xs text-gray-400 text-center">
                         P(X=k) = C(n, k) * p^k * (1-p)^(n-k)
                     </div>
-                </div> 
-            </div> 
-        `; 
-    } 
- 
-    // ========== СТРАНИЦА О КОМПАНИИ ========== 
-    function renderAboutPage() { 
-        return ` 
+                </div>
+            </div>
+        `;
+    }
+
+    // ========== СТРАНИЦА О КОМПАНИИ ==========
+    function renderAboutPage() {
+        return `
             <div class="space-y-6">
-                <div class="glass-panel p-6 md:p-8 rounded-2xl"> 
-                    <div class="text-center mb-8"> 
+                <div class="glass-panel p-6 md:p-8 rounded-2xl">
+                    <div class="text-center mb-8">
                         <img src="https://mercuryenergy.kz/logo.jpg" alt="Logo" class="h-16 mx-auto mb-4 rounded-lg">
-                        <h1 class="text-3xl md:text-4xl font-bold gradient-text">Mercury Energy</h1> 
-                        <p class="text-gray-400 mt-2 italic">From the endless steppes to the eternal sky</p> 
-                    </div> 
-                    
+                        <h1 class="text-3xl md:text-4xl font-bold gradient-text">Mercury Energy</h1>
+                        <p class="text-gray-500 mt-2 italic">From the endless steppes to the eternal sky</p>
+                    </div>
+
                     <div class="grid md:grid-cols-2 gap-8 items-center">
-                        <div class="space-y-4"> 
-                            <h2 class="text-2xl font-semibold text-blue-400">О компании</h2> 
-                            <p class="text-gray-300 leading-relaxed text-sm">Mercury Energy — один из ведущих поставщиков авиационного топлива в Казахстане. Мы обеспечиваем бесперебойные поставки высококачественного топлива в крупнейшие аэропорты страны, гарантируя соблюдение международных стандартов и строгий контроль качества.</p> 
-                            <p class="text-gray-300 leading-relaxed text-sm">Инфраструктура авиатопливообеспечения и технологические установки Mercury Energy соответствуют международным стандартам Joint Inspection Group (JIG 2).</p> 
-                        </div> 
+                        <div class="space-y-4">
+                            <h2 class="text-2xl font-semibold text-blue-600">О компании</h2>
+                            <p class="text-gray-600 leading-relaxed text-sm">Mercury Energy — один из ведущих поставщиков авиационного топлива в Казахстане. Мы обеспечиваем бесперебойные поставки высококачественного топлива в крупнейшие аэропорты страны, гарантируя соблюдение международных стандартов и строгий контроль качества.</p>
+                            <p class="text-gray-600 leading-relaxed text-sm">Инфраструктура авиатопливообеспечения и технологические установки Mercury Energy соответствуют международным стандартам Joint Inspection Group (JIG 2).</p>
+                        </div>
                         <div class="rounded-2xl overflow-hidden shadow-2xl">
                             <img src="https://mercuryenergy.kz/22.jpg" alt="Facilities" class="w-full h-64 object-cover">
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4"> 
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="glass-panel p-6 text-center bento-card">
-                        <div class="text-3xl font-bold text-blue-400 mb-1">19 000</div>
-                        <div class="text-[10px] text-gray-400 uppercase tracking-wider">м³ объём хранения</div>
-                    </div> 
+                        <div class="text-3xl font-bold text-blue-600 mb-1">19 000</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">м³ объём хранения</div>
+                    </div>
                     <div class="glass-panel p-6 text-center bento-card">
-                        <div class="text-3xl font-bold text-blue-400 mb-1">13</div>
-                        <div class="text-[10px] text-gray-400 uppercase tracking-wider">резервуаров</div>
-                    </div> 
+                        <div class="text-3xl font-bold text-blue-600 mb-1">13</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">резервуаров</div>
+                    </div>
                     <div class="glass-panel p-6 text-center bento-card">
-                        <div class="text-3xl font-bold text-blue-400 mb-1">2018</div>
-                        <div class="text-[10px] text-gray-400 uppercase tracking-wider">год запуска</div>
-                    </div> 
+                        <div class="text-3xl font-bold text-blue-600 mb-1">2018</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">год запуска</div>
+                    </div>
                     <div class="glass-panel p-6 text-center bento-card">
-                        <div class="text-3xl font-bold text-blue-400 mb-1">6 км</div>
-                        <div class="text-[10px] text-gray-400 uppercase tracking-wider">до аэропорта</div>
-                    </div> 
-                </div> 
-                 
-                <div class="glass-panel p-6 md:p-8 rounded-2xl"> 
-                    <h3 class="text-2xl font-semibold mb-8 text-center text-blue-400">Руководство</h3> 
-                    <div class="grid md:grid-cols-3 gap-8"> 
+                        <div class="text-3xl font-bold text-blue-600 mb-1">6 км</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">до аэропорта</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 md:p-8 rounded-2xl">
+                    <h3 class="text-2xl font-semibold mb-8 text-center text-blue-600">Руководство</h3>
+                    <div class="grid md:grid-cols-3 gap-8">
                         <div class="text-center group">
                             <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-blue-500/30 group-hover:border-blue-500 transition-all">
                                 <img src="https://mercuryenergy.kz/ssaya.jpeg" alt="Director" class="w-full h-full object-cover">
                             </div>
-                            <h4 class="font-bold text-blue-300">Максат Аканович</h4>
-                            <p class="text-xs text-gray-400 mt-1">Генеральный директор</p>
-                        </div> 
+                            <h4 class="font-bold text-slate-800">Максат Аканович</h4>
+                            <p class="text-xs text-gray-500 mt-1">Генеральный директор</p>
+                        </div>
                         <div class="text-center group">
                             <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-blue-500/30 group-hover:border-blue-500 transition-all">
                                 <img src="https://mercuryenergy.kz/ttagatt.jpg" alt="Engineer" class="w-full h-full object-cover">
                             </div>
-                            <h4 class="font-bold text-blue-300">Талгат Тажибаев</h4>
-                            <p class="text-xs text-gray-400 mt-1">Главный инженер</p>
-                        </div> 
+                            <h4 class="font-bold text-slate-800">Талгат Тажибаев</h4>
+                            <p class="text-xs text-gray-500 mt-1">Главный инженер</p>
+                        </div>
                         <div class="text-center group">
                             <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-blue-500/30 group-hover:border-blue-500 transition-all">
                                 <img src="https://mercuryenergy.kz/vvera.jpg" alt="Lab" class="w-full h-full object-cover">
                             </div>
-                            <h4 class="font-bold text-blue-300">Вера Шашкова</h4>
-                            <p class="text-xs text-gray-400 mt-1">Руководитель лаборатории</p>
-                        </div> 
-                    </div> 
-                </div> 
+                            <h4 class="font-bold text-slate-800">Вера Шашкова</h4>
+                            <p class="text-xs text-gray-500 mt-1">Руководитель лаборатории</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        `; 
-    } 
- 
-    // ========== СТРАНИЦА НОВОСТЕЙ ========== 
-    function renderNewsPage() { 
-        const sorted = getSortedNews(); 
-        return ` 
-            <div class="space-y-6"> 
-                <div class="flex flex-wrap justify-between items-center gap-3"> 
-                    <h2 class="text-2xl font-bold"><i class="fas fa-newspaper text-blue-400 mr-2"></i>Новости компании</h2> 
-                    <div class="flex gap-2 text-sm bg-white/5 p-1 rounded-full"> 
-                        <button data-news-sort="newest" class="sort-news-btn px-3 py-1 rounded-full ${newsSortMode === 'newest' ? 'bg-blue-600' : 'bg-white/10'}">Новые</button> 
-                        <button data-news-sort="oldest" class="sort-news-btn px-3 py-1 rounded-full ${newsSortMode === 'oldest' ? 'bg-blue-600' : 'bg-white/10'}">Старые</button> 
-                        <button data-news-sort="trending" class="sort-news-btn px-3 py-1 rounded-full ${newsSortMode === 'trending' ? 'bg-blue-600' : 'bg-white/10'}">Популярные</button> 
-                    </div> 
-                </div> 
-                <div class="grid gap-6 md:grid-cols-2"> 
-                    ${sorted.map(item => ` 
-                        <div class="glass-panel overflow-hidden bento-card flex flex-col"> 
+        `;
+    }
+
+    // ========== СТРАНИЦА НОВОСТЕЙ ==========
+    function renderNewsPage() {
+        const sorted = getSortedNews();
+        return `
+            <div class="space-y-6">
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <h2 class="text-2xl font-bold"><i class="fas fa-newspaper text-blue-600 mr-2"></i>Новости компании</h2>
+                    <div class="flex gap-2 text-sm bg-slate-200 p-1 rounded-full">
+                        <button data-news-sort="newest" class="sort-news-btn px-4 py-1.5 rounded-full transition-all ${newsSortMode === 'newest' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-300'}">Новые</button>
+                        <button data-news-sort="oldest" class="sort-news-btn px-4 py-1.5 rounded-full transition-all ${newsSortMode === 'oldest' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-300'}">Старые</button>
+                        <button data-news-sort="trending" class="sort-news-btn px-4 py-1.5 rounded-full transition-all ${newsSortMode === 'trending' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-300'}">Популярные</button>
+                    </div>
+                </div>
+                <div class="grid gap-6 md:grid-cols-2">
+                    ${sorted.map(item => `
+                        <div class="glass-panel overflow-hidden bento-card flex flex-col">
                             <div class="h-48 overflow-hidden">
                                 <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
                             </div>
                             <div class="p-5 flex flex-col flex-grow">
-                                <div class="flex justify-between items-center mb-3"> 
-                                    <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full uppercase tracking-tighter">📅 ${formatDate(item.date)}</span> 
-                                    <span class="text-[10px] bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded-full">🔥 ${item.trending}</span> 
-                                </div> 
-                                <h3 class="font-bold text-lg mb-2 leading-tight">${item.title}</h3> 
-                                <p class="text-gray-400 text-sm line-clamp-3 mb-4">${item.content}</p> 
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">📅 ${formatDate(item.date)}</span>
+                                    <span class="text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-bold">🔥 ${item.trending}</span>
+                                </div>
+                                <h3 class="font-bold text-lg mb-2 leading-tight text-slate-800">${item.title}</h3>
+                                <p class="text-gray-500 text-sm line-clamp-3 mb-4">${item.content}</p>
                                 <div class="mt-auto">
-                                    <button class="w-full py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold hover:bg-white/10 transition-colors">Читать статью</button>
+                                    <button class="w-full py-2.5 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 text-xs font-bold hover:bg-blue-100 transition-colors">Читать статью</button>
                                 </div>
                             </div>
-                        </div> 
-                    `).join('')} 
-                </div> 
-            </div> 
-        `; 
-    } 
- 
-    // ========== СТРАНИЦА ЦЕН ========== 
-    function renderPricesPage() { 
-        return ` 
-            <div class="space-y-6"> 
-                <h2 class="text-2xl font-bold text-center"><i class="fas fa-tags text-blue-400 mr-2"></i>Топливные цены</h2> 
-                <p class="text-center text-gray-400">Актуально на 18 мая 2026 года</p> 
-                <div class="grid md:grid-cols-2 gap-5"> 
-                    <div class="glass-panel p-6 rounded-xl"> 
-                        <h3 class="text-xl font-semibold text-blue-400 mb-4"><i class="fas fa-oil-can mr-2"></i>Дизельное топливо</h3> 
-                        <div class="space-y-2"> 
-                            <div class="flex justify-between py-2 border-b border-white/10"><span>Атырау (нефтебаза)</span><span class="font-bold">285 ₸/л</span></div> 
-                            <div class="flex justify-between py-2 border-b border-white/10"><span>Актобе (нефтебаза)</span><span class="font-bold">290 ₸/л</span></div> 
-                            <div class="flex justify-between py-2"><span>Шымкент (нефтебаза)</span><span class="font-bold">303 ₸/л</span></div> 
-                        </div> 
-                    </div> 
-                    <div class="glass-panel p-6 rounded-xl"> 
-                        <h3 class="text-xl font-semibold text-sky-400 mb-4"><i class="fas fa-gas-pump mr-2"></i>Авиатопливо и бензин</h3> 
-                        <div class="space-y-2"> 
-                            <div class="flex justify-between py-2 border-b border-white/10"><span>Авиатопливо (Jet A-1)</span><span class="font-bold">по запросу</span></div> 
-                            <div class="flex justify-between py-2 border-b border-white/10"><span>Бензин АИ-92</span><span class="font-bold">225 ₸/л</span></div> 
-                            <div class="flex justify-between py-2"><span>Бензин АИ-95</span><span class="font-bold">235 ₸/л</span></div> 
-                        </div> 
-                    </div> 
-                </div> 
-            </div> 
-        `; 
-    } 
- 
-    // ========== СТРАНИЦА КОНТАКТОВ ========== 
-    function renderContactsPage() { 
-        return ` 
-            <div class="glass-panel p-6 md:p-8 rounded-2xl"> 
-                <div class="text-center mb-10"> 
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/10 mb-4">
-                        <i class="fas fa-map-marker-alt text-3xl text-blue-400"></i>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // ========== СТРАНИЦА ЦЕН ==========
+    function renderPricesPage() {
+        return `
+            <div class="space-y-6">
+                <h2 class="text-2xl font-bold text-center"><i class="fas fa-tags text-blue-600 mr-2"></i>Топливные цены</h2>
+                <p class="text-center text-gray-500">Актуально на 18 мая 2026 года</p>
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div class="glass-panel p-6 rounded-xl">
+                        <h3 class="text-xl font-semibold text-blue-600 mb-4"><i class="fas fa-oil-can mr-2"></i>Дизельное топливо</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between py-3 border-b border-gray-100 text-slate-700"><span>Атырау (нефтебаза)</span><span class="font-bold">285 ₸/л</span></div>
+                            <div class="flex justify-between py-3 border-b border-gray-100 text-slate-700"><span>Актобе (нефтебаза)</span><span class="font-bold">290 ₸/л</span></div>
+                            <div class="flex justify-between py-3 text-slate-700"><span>Шымкент (нефтебаза)</span><span class="font-bold">303 ₸/л</span></div>
+                        </div>
                     </div>
-                    <h2 class="text-3xl font-bold gradient-text">Свяжитесь с нами</h2> 
-                    <p class="text-gray-400 mt-2">Мы всегда на связи для решения ваших задач</p>
-                </div> 
-                <div class="grid md:grid-cols-2 gap-10"> 
-                    <div class="space-y-6"> 
+                    <div class="glass-panel p-6 rounded-xl">
+                        <h3 class="text-xl font-semibold text-sky-600 mb-4"><i class="fas fa-gas-pump mr-2"></i>Авиатопливо и бензин</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between py-3 border-b border-gray-100 text-slate-700"><span>Авиатопливо (Jet A-1)</span><span class="font-bold text-blue-600">по запросу</span></div>
+                            <div class="flex justify-between py-3 border-b border-gray-100 text-slate-700"><span>Бензин АИ-92</span><span class="font-bold">225 ₸/л</span></div>
+                            <div class="flex justify-between py-3 text-slate-700"><span>Бензин АИ-95</span><span class="font-bold">235 ₸/л</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // ========== СТРАНИЦА КОНТАКТОВ ==========
+    function renderContactsPage() {
+        return `
+            <div class="glass-panel p-6 md:p-8 rounded-2xl">
+                <div class="text-center mb-10">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
+                        <i class="fas fa-map-marker-alt text-3xl text-blue-600"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold gradient-text">Свяжитесь с нами</h2>
+                    <p class="text-gray-500 mt-2">Мы всегда на связи для решения ваших задач</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="space-y-6">
                         <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0"><i class="fas fa-location-dot text-blue-400"></i></div>
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0"><i class="fas fa-location-dot text-blue-600"></i></div>
                             <div>
-                                <h4 class="font-bold text-gray-200">Адрес нефтебазы</h4>
-                                <p class="text-sm text-gray-400">г. Алматы, Турксибский район, ул. Свободная 136/2</p>
+                                <h4 class="font-bold text-slate-800">Адрес нефтебазы</h4>
+                                <p class="text-sm text-gray-600">г. Алматы, Турксибский район, ул. Свободная 136/2</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0"><i class="fas fa-phone text-blue-400"></i></div>
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0"><i class="fas fa-phone text-blue-600"></i></div>
                             <div>
-                                <h4 class="font-bold text-gray-200">Телефон</h4>
-                                <a href="tel:+77273132596" class="text-sm text-blue-400 hover:underline">+7 (727) 313 25 96</a>
+                                <h4 class="font-bold text-slate-800">Телефон</h4>
+                                <a href="tel:+77273132596" class="text-sm text-blue-600 hover:underline font-semibold">+7 (727) 313 25 96</a>
                             </div>
                         </div>
                         <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0"><i class="fas fa-envelope text-blue-400"></i></div>
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0"><i class="fas fa-envelope text-blue-600"></i></div>
                             <div>
-                                <h4 class="font-bold text-gray-200">E-mail</h4>
-                                <a href="mailto:info@mercuryenergy.kz" class="text-sm text-blue-400 hover:underline">info@mercuryenergy.kz</a>
+                                <h4 class="font-bold text-slate-800">E-mail</h4>
+                                <a href="mailto:info@mercuryenergy.kz" class="text-sm text-blue-600 hover:underline font-semibold">info@mercuryenergy.kz</a>
                             </div>
                         </div>
-                    </div> 
-                    <div class="space-y-6"> 
+                    </div>
+                    <div class="space-y-6">
                         <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0"><i class="fas fa-clock text-blue-400"></i></div>
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0"><i class="fas fa-clock text-blue-600"></i></div>
                             <div>
-                                <h4 class="font-bold text-gray-200">Режим работы</h4>
-                                <p class="text-sm text-gray-400">Круглосуточно, 24/7</p>
+                                <h4 class="font-bold text-slate-800">Режим работы</h4>
+                                <p class="text-sm text-gray-600">Круглосуточно, 24/7</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0"><i class="fas fa-flask text-blue-400"></i></div>
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0"><i class="fas fa-flask text-blue-600"></i></div>
                             <div>
-                                <h4 class="font-bold text-gray-200">Лаборатория</h4>
-                                <p class="text-sm text-gray-400">Собственная сертифицированная лаборатория контроля качества</p>
+                                <h4 class="font-bold text-slate-800">Лаборатория</h4>
+                                <p class="text-sm text-gray-600">Собственная сертифицированная лаборатория контроля качества</p>
                             </div>
                         </div>
-                        <div class="bg-blue-500/10 p-4 rounded-xl flex items-center gap-3">
-                            <i class="fas fa-plane-arrival text-blue-400"></i>
-                            <p class="text-xs text-gray-300">Расстояние до аэропорта Алматы — <span class="font-bold text-white">6 км</span></p>
+                        <div class="bg-blue-50 p-4 rounded-xl flex items-center gap-3">
+                            <i class="fas fa-plane-arrival text-blue-600"></i>
+                            <p class="text-xs text-gray-600 font-medium">Расстояние до аэропорта Алматы — <span class="font-bold text-blue-700">6 км</span></p>
                         </div>
-                    </div> 
-                </div> 
-                <div class="mt-10 rounded-2xl overflow-hidden grayscale contrast-125 opacity-70 border border-white/10 h-64">
+                    </div>
+                </div>
+                <div class="mt-10 rounded-2xl overflow-hidden grayscale contrast-125 opacity-80 border border-gray-200 h-64">
                     <iframe src="https://yandex.kz/map-widget/v1/?ll=77.003968%2C43.348314&mode=search&oid=98395703974&ol=biz&z=14" width="100%" height="100%" frameborder="0"></iframe>
                 </div>
-            </div> 
-        `; 
-    } 
- 
-    // ========== ФУНКЦИЯ ОТРИСОВКИ ГРАФИКА БЕРНУЛЛИ ========== 
-    let bernoulliChart = null; 
-    function initBernoulliChart() { 
-        const ctx = document.getElementById('bernoulliChart')?.getContext('2d'); 
-        if (!ctx) return; 
-        
+            </div>
+        `;
+    }
+
+    // ========== ФУНКЦИЯ ОТРИСОВКИ ГРАФИКА БЕРНУЛЛИ ==========
+    let bernoulliChart = null;
+    function initBernoulliChart() {
+        const ctx = document.getElementById('bernoulliChart')?.getContext('2d');
+        if (!ctx) return;
+
         const n = parseInt(document.getElementById('bernoulliN').value) || 0;
         const p = parseFloat(document.getElementById('bernoulliP').value) || 0;
-        
+
         const k_values = Array.from({length: n + 1}, (_, i) => i);
         const probabilities = k_values.map(k => bernoulliProbability(n, k, p));
 
-        if (bernoulliChart) bernoulliChart.destroy(); 
-        bernoulliChart = new Chart(ctx, { 
-            type: 'bar', 
-            data: { 
-                labels: k_values, 
+        if (bernoulliChart) bernoulliChart.destroy();
+        bernoulliChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: k_values,
                 datasets: [{
                     label: `P(X=k) (n=${n}, p=${p})`,
                     data: probabilities,
                     backgroundColor: 'rgba(239, 68, 68, 0.6)',
                     borderColor: 'rgba(239, 68, 68, 1)',
                     borderWidth: 1
-                }] 
-            }, 
-            options: { 
-                responsive: true, 
+                }]
+            },
+            options: {
+                responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ccc' } },
-                    x: { grid: { display: false }, ticks: { color: '#ccc' } }
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#64748b' } },
+                    x: { grid: { display: false }, ticks: { color: '#64748b' } }
                 },
-                plugins: { legend: { labels: { color: '#ccc' } } } 
-            } 
-        }); 
-    } 
- 
-    // ========== ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ ========== 
-    function renderPage(pageId) { 
-        if (pageId === 'home') { 
-            document.getElementById('pageContent').innerHTML = renderHome(); 
-            attachHomeEvents(); 
-        } else if (pageId === 'tanks') { 
-            document.getElementById('pageContent').innerHTML = renderTanksPage(); 
+                plugins: { legend: { labels: { color: '#64748b' } } }
+            }
+        });
+    }
+
+    // ========== ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ ==========
+    function renderPage(pageId) {
+        if (pageId === 'home') {
+            document.getElementById('pageContent').innerHTML = renderHome();
+            attachHomeEvents();
+        } else if (pageId === 'tanks') {
+            document.getElementById('pageContent').innerHTML = renderTanksPage();
             initBernoulliChart();
-            attachTankCalculator(); 
-        } else if (pageId === 'about') { 
-            document.getElementById('pageContent').innerHTML = renderAboutPage(); 
-        } else if (pageId === 'news') { 
-            document.getElementById('pageContent').innerHTML = renderNewsPage(); 
-            attachNewsEvents(); 
-        } else if (pageId === 'prices') { 
-            document.getElementById('pageContent').innerHTML = renderPricesPage(); 
-        } else if (pageId === 'contacts') { 
-            document.getElementById('pageContent').innerHTML = renderContactsPage(); 
-        } 
-        window.scrollTo({ top: 0, behavior: 'smooth' }); 
-    } 
- 
-    function attachHomeEvents() { 
-        document.querySelectorAll('.nav-page-btn, [data-nav]').forEach(btn => { 
-            btn.addEventListener('click', (e) => { 
-                const target = btn.getAttribute('data-nav'); 
-                if (target && target !== 'home') renderPage(target); 
-                closeMenu(); 
-                e.preventDefault(); 
-            }); 
-        }); 
-    } 
- 
-    function attachTankCalculator() { 
-        const nInput = document.getElementById('bernoulliN'); 
-        const pInput = document.getElementById('bernoulliP'); 
-        if (nInput && pInput) { 
-            nInput.addEventListener('input', initBernoulliChart); 
-            pInput.addEventListener('input', initBernoulliChart); 
-        } 
-    } 
- 
-    function attachNewsEvents() { 
-        document.querySelectorAll('.sort-news-btn').forEach(btn => { 
-            btn.addEventListener('click', (e) => { 
-                const sortVal = btn.getAttribute('data-news-sort'); 
-                if (sortVal) { 
-                    newsSortMode = sortVal; 
-                    renderPage('news'); 
-                } 
-            }); 
-        }); 
-    } 
- 
-    // Меню и кнопки 
-    const menuOverlay = document.getElementById('menuOverlay'); 
-    function closeMenu() { menuOverlay.style.transform = 'translateX(-100%)'; document.body.style.overflow = ''; } 
-    function openMenu() { menuOverlay.style.transform = 'translateX(0%)'; document.body.style.overflow = 'hidden'; } 
-    document.getElementById('hamburgerBtn')?.addEventListener('click', openMenu); 
-    document.getElementById('closeMenuBtn')?.addEventListener('click', closeMenu); 
-    menuOverlay.addEventListener('click', (e) => { if (e.target === menuOverlay) closeMenu(); }); 
-    document.querySelectorAll('.menu-link').forEach(link => { 
-        link.addEventListener('click', (e) => { 
-            const target = link.getAttribute('data-nav'); 
-            if (target) renderPage(target); 
-            closeMenu(); 
-            e.preventDefault(); 
-        }); 
-    }); 
-    document.getElementById('homeButton')?.addEventListener('click', () => { renderPage('home'); closeMenu(); }); 
-     
-    renderPage('home'); 
-</script> 
-</body> 
-</html> 
+            attachTankCalculator();
+        } else if (pageId === 'about') {
+            document.getElementById('pageContent').innerHTML = renderAboutPage();
+        } else if (pageId === 'news') {
+            document.getElementById('pageContent').innerHTML = renderNewsPage();
+            attachNewsEvents();
+        } else if (pageId === 'prices') {
+            document.getElementById('pageContent').innerHTML = renderPricesPage();
+        } else if (pageId === 'contacts') {
+            document.getElementById('pageContent').innerHTML = renderContactsPage();
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function attachHomeEvents() {
+        document.querySelectorAll('.nav-page-btn, [data-nav]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = btn.getAttribute('data-nav');
+                if (target && target !== 'home') renderPage(target);
+                closeMenu();
+                e.preventDefault();
+            });
+        });
+    }
+
+    function attachTankCalculator() {
+        const nInput = document.getElementById('bernoulliN');
+        const pInput = document.getElementById('bernoulliP');
+        if (nInput && pInput) {
+            nInput.addEventListener('input', initBernoulliChart);
+            pInput.addEventListener('input', initBernoulliChart);
+        }
+    }
+
+    function attachNewsEvents() {
+        document.querySelectorAll('.sort-news-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const sortVal = btn.getAttribute('data-news-sort');
+                if (sortVal) {
+                    newsSortMode = sortVal;
+                    renderPage('news');
+                }
+            });
+        });
+    }
+
+    // Меню и кнопки
+    const menuOverlay = document.getElementById('menuOverlay');
+    function closeMenu() { menuOverlay.style.transform = 'translateX(-100%)'; document.body.style.overflow = ''; }
+    function openMenu() { menuOverlay.style.transform = 'translateX(0%)'; document.body.style.overflow = 'hidden'; }
+    document.getElementById('hamburgerBtn')?.addEventListener('click', openMenu);
+    document.getElementById('closeMenuBtn')?.addEventListener('click', closeMenu);
+    menuOverlay.addEventListener('click', (e) => { if (e.target === menuOverlay) closeMenu(); });
+    document.querySelectorAll('.menu-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const target = link.getAttribute('data-nav');
+            if (target) renderPage(target);
+            closeMenu();
+            e.preventDefault();
+        });
+    });
+    document.getElementById('homeButton')?.addEventListener('click', () => { renderPage('home'); closeMenu(); });
+
+    renderPage('home');
+</script>
+</body>
+</html>
