@@ -1,0 +1,1208 @@
+   201	<script>
+   202	    window.heroVideoPlayed = false;
+   203	    function combinations(n, k) { if (k < 0 || k > n) return 0; if (k === 0 || k === n) return 1; if (k > n / 2) k = n - k; let res = 1; for (let i = 1; i <= k; i++) res = res * (n - i + 1) / i; return Math.round(res); }
+   204	    function bernoulliProbability(n, k, p) { return combinations(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k); }
+   205
+   206	        const defaultPrices = {
+   207	        diesel: [
+   208	            { location: "Атырау (нефтебаза)", price: "285 ₸/л" },
+   209	            { location: "Актобе (нефтебаза)", price: "290 ₸/л" },
+   210	            { location: "Шымкент (нефтебаза)", price: "303 ₸/л" }
+   211	        ],
+   212	        aviationAndPetrol: [
+   213	            { name: "Авиатопливо (Jet A-1)", price: "по запросу" },
+   214	            { name: "Бензин АИ-92", price: "225 ₸/л" },
+   215	            { name: "Бензин АИ-95", price: "235 ₸/л" }
+   216	        ],
+   217	        updatedAt: "18 мая 2026 года"
+   218	    };
+   219
+   220	    // --- State Initialization ---
+   221	    const defaultNews = [
+   222	        { id: 1, title: "Модернизация нефтебазы JIG", content: "Поэтапная модернизация в соответствии с международными стандартами JIG 2 (issue 13, 2021).", date: "2025-04-20", trending: 92, img: "https://mercuryenergy.kz/upload/iblock/d7a/news.jpg" },
+   223	        { id: 2, title: "Практика студентов КазНУ", content: "Студенты 4-го курса КазНУ им. Аль-Фараби успешно прошли практику на нефтебазе.", date: "2026-04-30", trending: 88, img: "https://mercuryenergy.kz/upload/iblock/d7a/KZNU.jpeg" },
+   224	        { id: 3, title: "Меморандум с SCAT Airlines", content: "Соглашение о развитии инфраструктуры хранения авиатоплива и расширении сети поставок.", date: "2024-04-30", trending: 75, img: "https://mercuryenergy.kz/scat.jpeg" },
+   225	        { id: 4, title: "Запуск Smart АЗС ION Energy", content: "Инновационный проект "умных" АЗС на модульной основе с цифровыми решениями.", date: "2025-03-15", trending: 94, img: "https://mercuryenergy.kz/upload/iblock/4b9/AZSION2.png" }
+   226	    ];
+   227
+   228	    const defaultTanks = [
+   229	        { id: 1, name: "Резервуар №1 (АИ-92)", value: 42500, max: 50000, color: "from-mercury-cyan to-mercury-steel" },
+   230	        { id: 2, name: "Резервуар №2 (АИ-95)", value: 31200, max: 50000, color: "from-mercury-steel to-mercury-lightNavy" },
+   231	        { id: 3, name: "Резервуар №3 (ДТ)", value: 48700, max: 60000, color: "from-emerald-500 to-emerald-400" },
+   232	        { id: 4, name: "Резервуар №4 (АИ-98)", value: 18600, max: 40000, color: "from-purple-500 to-purple-400" }
+   233	    ];
+   234
+   235	    const defaultUsers = [
+   236	        {
+   237	            username: "admin",
+   238	            password: "admin",
+   239	            role: "admin",
+   240	            firstName: "Админ",
+   241	            lastName: "Главный",
+   242	            position: "Администратор",
+   243	            birthDate: "1985-01-01",
+   244	            cabinet: "101",
+   245	            photo: null,
+   246	            permissions: {
+   247	                viewTanks: "all",
+   248	                canEditPrices: true,
+   249	                canEditTanks: true,
+   250	                canAddNews: true
+   251	            }
+   252	        }
+   253	    ];
+   254
+   255	    if (!localStorage.getItem("mercuryPrices")) localStorage.setItem("mercuryPrices", JSON.stringify(defaultPrices));
+   256	    if (!localStorage.getItem("mercuryNews")) localStorage.setItem("mercuryNews", JSON.stringify(defaultNews));
+   257	    if (!localStorage.getItem("mercuryTanks")) localStorage.setItem("mercuryTanks", JSON.stringify(defaultTanks));
+   258	    if (!localStorage.getItem("mercuryUsers")) localStorage.setItem("mercuryUsers", JSON.stringify(defaultUsers));
+   259
+   260	    let fuelPrices = JSON.parse(localStorage.getItem("mercuryPrices"));
+   261	    let newsArchive = JSON.parse(localStorage.getItem("mercuryNews"));
+   262	    let tanksData = JSON.parse(localStorage.getItem("mercuryTanks"));
+   263	    let users = JSON.parse(localStorage.getItem("mercuryUsers"));
+   264	    let currentUser = JSON.parse(localStorage.getItem("mercuryUser")) || null;
+   265
+   266	    if (currentUser) {
+   267	        const found = users.find(u => u.username === currentUser.username);
+   268	        if (found) {
+   269	            currentUser = found;
+   270	            localStorage.setItem("mercuryUser", JSON.stringify(currentUser));
+   271	        }
+   272	    }
+   273
+   274	    function renderHeader() {
+   275	        const nav = document.getElementById('headerNav');
+   276	        if (!nav) return;
+   277
+   278	        let adminButtons = '';
+   279	        if (currentUser && currentUser.role === 'admin') {
+   280	            adminButtons = `
+   281	                <button id="usersListBtn" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all">
+   282	                    <i class="fas fa-users text-xs"></i>
+   283	                    <span>Список</span>
+   284	                </button>
+   285	            `;
+   286	        }
+   287
+   288	        let authButton = '';
+   289	        if (currentUser) {
+   290	            authButton = `
+   291	                <div class="flex flex-col items-center gap-1">
+   292	                    <button id="logoutBtn" class="bg-red-500/20 text-red-400 flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border border-red-500/30 transition-all hover:bg-red-500/30">
+   293	                        <i class="fas fa-sign-out-alt text-xs"></i>
+   294	                        <span>Выход</span>
+   295	                    </button>
+   296	                    ${currentUser.role === 'admin' ? `
+   297	                    <button id="addUserBtn" class="text-[9px] text-mercury-cyan hover:underline">
+   298	                        + Добавить нового User
+   299	                    </button>
+   300	                    ` : ''}
+   301	                </div>
+   302	            `;
+   303	        } else {
+   304	            authButton = `
+   305	                <button data-nav="login" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn">
+   306	                    <i class="fas fa-user text-xs"></i>
+   307	                    <span>Вход</span>
+   308	                </button>
+   309	            `;
+   310	        }
+   311
+   312	        nav.innerHTML = `
+   313	            <button id="homeButton" class="home-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-btn">
+   314	                <i class="fas fa-home text-xs"></i>
+   315	                <span>Главная</span>
+   316	            </button>
+   317	            <button data-nav="about" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn">
+   318	                <i class="fas fa-building text-xs"></i>
+   319	                <span class="hidden sm:inline">О компании</span>
+   320	            </button>
+   321	            ${currentUser ? `
+   322	            <button data-nav="tanks" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn">
+   323	                <i class="fas fa-oil-can text-xs"></i>
+   324	                <span class="hidden sm:inline">АЗС / Нефтебаза</span>
+   325	            </button> ` : ''}
+   326	            <button data-nav="contacts" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn">
+   327	                <i class="fas fa-phone text-xs"></i>
+   328	                <span class="hidden sm:inline">Контакты</span>
+   329	            </button>
+   330	            ${currentUser ? `
+   331	            <button data-nav="profile" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn">
+   332	                <i class="fas fa-user-circle text-xs"></i>
+   333	                <span class="hidden sm:inline">Мой кабинет</span>
+   334	            </button> ` : ''}
+   335	            ${adminButtons}
+   336	            <a href="https://mercuryenergy.kz" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 bg-mercury-gold/10 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border border-mercury-gold/30 hover:bg-mercury-gold/20 transition-all nav-btn text-mercury-cyan">
+   337	                <i class="fas fa-external-link-alt text-xs"></i>
+   338	                <span class="hidden sm:inline">Сайт</span>
+   339	            </a>
+   340	            ${authButton}
+   341	        `;
+   342
+   343	        document.getElementById('homeButton')?.addEventListener('click', () => renderPage('home'));
+   344	        document.getElementById('logoutBtn')?.addEventListener('click', () => {
+   345	            currentUser = null;
+   346	            localStorage.removeItem('mercuryUser');
+   347	            renderHeader();
+   348	            renderPage('home');
+   349	        });
+   350	        document.getElementById('usersListBtn')?.addEventListener('click', () => openUsersListModal());
+   351	        document.getElementById('addUserBtn')?.addEventListener('click', () => openAddUserModal());
+   352	    }
+   353
+   354	    function showModal(title, bodyHtml) {
+   355	        document.getElementById('modalTitle').innerText = title;
+   356	        document.getElementById('modalBody').innerHTML = bodyHtml;
+   357	        document.getElementById('modalOverlay').classList.remove('hidden');
+   358	    }
+   359
+   360	    function closeModal() {
+   361	        document.getElementById('modalOverlay').classList.add('hidden');
+   362	        document.getElementById('modalBody').innerHTML = '';
+   363	    }
+   364
+   365	    document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
+   366	    document.getElementById('modalOverlay')?.addEventListener('click', (e) => {
+   367	        if (e.target === document.getElementById('modalOverlay')) closeModal();
+   368	    });
+   369
+   370
+   371	    " class="w-full h-full object-cover">` : `<i class="fas fa-user text-xs text-mercury-gold/40"></i>`}
+   372	                    </div>
+   373	                    <div>
+   374	                        <div class="font-bold text-mercury-gold">${u.firstName} ${u.lastName} <span class="text-[10px] text-mercury-cream/40 font-normal ml-1">@${u.username}</span></div>
+   375	                        <div class="text-[10px] text-mercury-cyan">${u.position}</div>
+   376	                    </div>
+   377	                </div>
+   378	                <div class="flex items-center gap-3">
+   379	                    <div class="text-[10px] text-mercury-cream/60 mr-4 font-mono">${u.password}</div>
+   380	                    <button onclick="openEditUserModal('${u.username}')" class="text-mercury-cyan hover:text-white transition-colors"><i class="fas fa-edit"></i></button>
+   381	                    ${u.role !== "admin" ? `<button onclick="deleteUser('${u.username}')" class="text-red-400 hover:text-red-300 transition-colors"><i class="fas fa-trash"></i></button>` : ""}
+   382	                </div>
+   383	            </div>
+   384	        `).join("");
+   385	        showModal("Список аккаунтов", `<div class="space-y-1">${rows}</div>`);
+   386	    }
+   387	</span>
+   388	                <span class="text-mercury-cream">${u.password}</span>
+   389	            </div>
+   390	        `).join('');
+   391	        showModal('Список аккаунтов', `<div class="space-y-1">${rows}</div>`);
+   392	    }
+   393
+   394	    function openAddNewsModal() {
+   395	        showModal('Добавить новость', `
+   396	            <form id="addNewsForm" class="space-y-4">
+   397	                <div>
+   398	                    <label class="block text-xs text-mercury-cream mb-1">Краткое название</label>
+   399	                    <input type="text" id="newsTitle" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   400	                </div>
+   401	                <div>
+   402	                    <label class="block text-xs text-mercury-cream mb-1">Полная новость</label>
+   403	                    <textarea id="newsContent" rows="4" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2 text-mercury-cream" required></textarea>
+   404	                </div>
+   405	                <div>
+   406	                    <label class="block text-xs text-mercury-cream mb-1">Прикрепить фото</label>
+   407	                    <input type="file" id="newsPhoto" accept="image/*" class="w-full text-xs text-mercury-cream">
+   408	                </div>
+   409	                <button type="submit" class="w-full bg-mercury-gold text-black font-bold py-2 rounded-xl mt-4">Опубликовать</button>
+   410	            </form>
+   411	        `);
+   412	        document.getElementById('addNewsForm').addEventListener('submit', (e) => {
+   413	            e.preventDefault();
+   414	            const title = document.getElementById('newsTitle').value;
+   415	            const content = document.getElementById('newsContent').value;
+   416	            const photoInput = document.getElementById('newsPhoto');
+   417
+   418	            const processNews = (imgSrc) => {
+   419	                const newNews = {
+   420	                    id: Date.now(),
+   421	                    title,
+   422	                    content,
+   423	                    date: new Date().toISOString().split('T')[0],
+   424	                    trending: Math.floor(Math.random() * 20) + 80,
+   425	                    img: imgSrc || "https://mercuryenergy.kz/upload/iblock/d7a/news.jpg"
+   426	                };
+   427	                newsArchive.unshift(newNews);
+   428	                localStorage.setItem('mercuryNews', JSON.stringify(newsArchive));
+   429	                closeModal();
+   430	                renderPage('news');
+   431	            };
+   432
+   433	            if (photoInput.files && photoInput.files[0]) {
+   434	                const reader = new FileReader();
+   435	                reader.onload = (event) => processNews(event.target.result);
+   436	                reader.readAsDataURL(photoInput.files[0]);
+   437	            } else {
+   438	                processNews();
+   439	            }
+   440	        });
+   441	    }
+   442
+   443
+   444	    function openAddUserModal() {
+   445	        showModal("Добавить нового пользователя", `
+   446	            <form id="addUserForm" class="space-y-4">
+   447	                <div class="grid grid-cols-2 gap-4">
+   448	                    <div>
+   449	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Логин</label>
+   450	                        <input type="text" id="newUsername" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   451	                    </div>
+   452	                    <div>
+   453	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Пароль</label>
+   454	                        <input type="text" id="newPassword" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   455	                    </div>
+   456	                </div>
+   457	                <div class="grid grid-cols-2 gap-4">
+   458	                    <div>
+   459	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Фамилия</label>
+   460	                        <input type="text" id="newLastName" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   461	                    </div>
+   462	                    <div>
+   463	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Имя</label>
+   464	                        <input type="text" id="newFirstName" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   465	                    </div>
+   466	                </div>
+   467	                <div class="grid grid-cols-2 gap-4">
+   468	                    <div>
+   469	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Должность</label>
+   470	                        <input type="text" id="newPosition" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   471	                    </div>
+   472	                    <div>
+   473	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Кабинет</label>
+   474	                        <input type="text" id="newCabinet" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   475	                    </div>
+   476	                </div>
+   477	                <div>
+   478	                    <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Дата рождения</label>
+   479	                    <input type="date" id="newBirthDate" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   480	                </div>
+   481
+   482	                <div class="space-y-2">
+   483	                    <p class="text-[10px] text-mercury-gold font-bold uppercase tracking-widest">Разрешения (птички)</p>
+   484	                    <div class="grid grid-cols-2 gap-2">
+   485	                        <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   486	                            <input type="checkbox" id="permEditPrices" class="rounded border-mercury-gold text-mercury-gold bg-black/20">
+   487	                            Изменение цен
+   488	                        </label>
+   489	                        <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   490	                            <input type="checkbox" id="permAddNews" class="rounded border-mercury-gold text-mercury-gold bg-black/20">
+   491	                            Добавление новостей
+   492	                        </label>
+   493	                        <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   494	                            <input type="checkbox" id="permEditTanks" class="rounded border-mercury-gold text-mercury-gold bg-black/20">
+   495	                            Правка резервуаров
+   496	                        </label>
+   497	                    </div>
+   498	                </div>
+   499
+   500	                <div class="space-y-2">
+   501	                    <p class="text-[10px] text-mercury-gold font-bold uppercase tracking-widest">Доступ к резервуарам</p>
+   502	                    <div class="flex items-center gap-4 mb-2">
+   503	                        <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   504	                            <input type="radio" name="tankAccess" id="tankAccessAll" value="all" checked class="text-mercury-gold">
+   505	                            Все
+   506	                        </label>
+   507	                        <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   508	                            <input type="radio" name="tankAccess" id="tankAccessSome" value="some" class="text-mercury-gold">
+   509	                            Выборочно
+   510	                        </label>
+   511	                    </div>
+   512	                    <div id="tankListCheckboxes" class="grid grid-cols-2 gap-2 opacity-50 pointer-events-none">
+   513	                        ${tanksData.map(t => `
+   514	                            <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   515	                                <input type="checkbox" name="tankId" value="${t.id}" class="tank-id-checkbox rounded border-mercury-gold text-mercury-gold bg-black/20">
+   516	                                ${t.name}
+   517	                            </label>
+   518	                        `).join("")}
+   519	                    </div>
+   520	                </div>
+   521
+   522	                <button type="submit" class="w-full bg-mercury-gold text-black font-bold py-2 rounded-xl mt-4 transition-all hover:bg-mercury-steel">Создать аккаунт</button>
+   523	            </form>
+   524	        `);
+   525
+   526	        // Handle tank list interactivity
+   527	        const radioSome = document.getElementById("tankAccessSome");
+   528	        const radioAll = document.getElementById("tankAccessAll");
+   529	        const tankList = document.getElementById("tankListCheckboxes");
+   530
+   531	        [radioSome, radioAll].forEach(r => r.addEventListener("change", () => {
+   532	            if (radioSome.checked) {
+   533	                tankList.classList.remove("opacity-50", "pointer-events-none");
+   534	            } else {
+   535	                tankList.classList.add("opacity-50", "pointer-events-none");
+   536	            }
+   537	        }));
+   538
+   539	        document.getElementById("addUserForm").addEventListener("submit", (e) => {
+   540	            e.preventDefault();
+   541	            const username = document.getElementById("newUsername").value;
+   542	            if (users.some(u => u.username === username)) {
+   543	                alert("Этот логин уже занят!");
+   544	                return;
+   545	            }
+   546
+   547	            const tankAccessType = document.querySelector("input[name='tankAccess']:checked").value;
+   548	            let selectedTanks = "all";
+   549	            if (tankAccessType === "some") {
+   550	                selectedTanks = Array.from(document.querySelectorAll(".tank-id-checkbox:checked")).map(cb => parseInt(cb.value));
+   551	            }
+   552
+   553	            const newUser = {
+   554	                username,
+   555	                password: document.getElementById("newPassword").value,
+   556	                role: "user",
+   557	                firstName: document.getElementById("newFirstName").value,
+   558	                lastName: document.getElementById("newLastName").value,
+   559	                position: document.getElementById("newPosition").value,
+   560	                birthDate: document.getElementById("newBirthDate").value,
+   561	                cabinet: document.getElementById("newCabinet").value,
+   562	                photo: null,
+   563	                permissions: {
+   564	                    viewTanks: selectedTanks,
+   565	                    canEditPrices: document.getElementById("permEditPrices").checked,
+   566	                    canEditTanks: document.getElementById("permEditTanks").checked,
+   567	                    canAddNews: document.getElementById("permAddNews").checked
+   568	                }
+   569	            };
+   570
+   571	            users.push(newUser);
+   572	            localStorage.setItem("mercuryUsers", JSON.stringify(users));
+   573	            closeModal();
+   574	            alert("Пользователь успешно создан!");
+   575	        });
+   576	    }
+   577	);
+   578	            localStorage.setItem('mercuryUsers', JSON.stringify(users));
+   579	            closeModal();
+   580	            alert('Пользователь создан!');
+   581	        });
+   582	    }
+   583
+   584
+   585	    function deleteUser(username) {
+   586	        if (confirm(`Вы уверены, что хотите удалить пользователя ${username}?`)) {
+   587	            users = users.filter(u => u.username !== username);
+   588	            localStorage.setItem('mercuryUsers', JSON.stringify(users));
+   589	            openUsersListModal();
+   590	        }
+   591	    }
+   592
+   593	    function openEditUserModal(username) {
+   594	        const u = users.find(user => user.username === username);
+   595	        if (!u) return;
+   596
+   597	        showModal(`Редактировать: ${username}`, `
+   598	            <form id="editUserForm" class="space-y-4">
+   599	                <div class="grid grid-cols-2 gap-4">
+   600	                    <div>
+   601	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Логин</label>
+   602	                        <input type="text" id="editUsername" value="${u.username}" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   603	                    </div>
+   604	                    <div>
+   605	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Пароль</label>
+   606	                        <input type="text" id="editPassword" value="${u.password}" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   607	                    </div>
+   608	                </div>
+   609	                <div class="grid grid-cols-2 gap-4">
+   610	                    <div>
+   611	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Фамилия</label>
+   612	                        <input type="text" id="editLastName" value="${u.lastName || ""}" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   613	                    </div>
+   614	                    <div>
+   615	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Имя</label>
+   616	                        <input type="text" id="editFirstName" value="${u.firstName || ""}" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   617	                    </div>
+   618	                </div>
+   619	                <div class="grid grid-cols-2 gap-4">
+   620	                    <div>
+   621	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Должность</label>
+   622	                        <input type="text" id="editPosition" value="${u.position || ""}" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   623	                    </div>
+   624	                    <div>
+   625	                        <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Кабинет</label>
+   626	                        <input type="text" id="editCabinet" value="${u.cabinet || ""}" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   627	                    </div>
+   628	                </div>
+   629	                <div>
+   630	                    <label class="block text-[10px] text-mercury-cream mb-1 uppercase">Дата рождения</label>
+   631	                    <input type="date" id="editBirthDate" value="${u.birthDate || ""}" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+   632	                </div>
+   633
+   634	                <div class="space-y-2">
+   635	                    <p class="text-[10px] text-mercury-gold font-bold uppercase tracking-widest">Разрешения</p>
+   636	                    <div class="grid grid-cols-2 gap-2">
+   637	                        <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   638	                            <input type="checkbox" id="editPermEditPrices" ${u.permissions.canEditPrices ? "checked" : ""} class="rounded border-mercury-gold text-mercury-gold bg-black/20">
+   639	                            Изменение цен
+   640	                        </label>
+   641	                        <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   642	                            <input type="checkbox" id="editPermAddNews" ${u.permissions.canAddNews ? "checked" : ""} class="rounded border-mercury-gold text-mercury-gold bg-black/20">
+   643	                            Добавление новостей
+   644	                        </label>
+   645	                        <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   646	                            <input type="checkbox" id="editPermEditTanks" ${u.permissions.canEditTanks ? "checked" : ""} class="rounded border-mercury-gold text-mercury-gold bg-black/20">
+   647	                            Правка резервуаров
+   648	                        </label>
+   649	                    </div>
+   650	                </div>
+   651
+   652	                <div class="space-y-2">
+   653	                    <p class="text-[10px] text-mercury-gold font-bold uppercase tracking-widest">Доступ к резервуарам</p>
+   654	                    <div class="flex items-center gap-4 mb-2">
+   655	                        <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   656	                            <input type="radio" name="editTankAccess" id="editTankAccessAll" value="all" ${u.permissions.viewTanks === "all" ? "checked" : ""} class="text-mercury-gold">
+   657	                            Все
+   658	                        </label>
+   659	                        <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   660	                            <input type="radio" name="editTankAccess" id="editTankAccessSome" value="some" ${u.permissions.viewTanks !== "all" ? "checked" : ""} class="text-mercury-gold">
+   661	                            Выборочно
+   662	                        </label>
+   663	                    </div>
+   664	                    <div id="editTankListCheckboxes" class="grid grid-cols-2 gap-2 ${u.permissions.viewTanks === "all" ? "opacity-50 pointer-events-none" : ""}">
+   665	                        ${tanksData.map(t => `
+   666	                            <label class="flex items-center gap-2 text-xs text-mercury-cream cursor-pointer">
+   667	                                <input type="checkbox" name="editTankId" value="${t.id}" ${u.permissions.viewTanks !== "all" && u.permissions.viewTanks.includes(t.id) ? "checked" : ""} class="edit-tank-id-checkbox rounded border-mercury-gold text-mercury-gold bg-black/20">
+   668	                                ${t.name}
+   669	                            </label>
+   670	                        `).join("")}
+   671	                    </div>
+   672	                </div>
+   673
+   674	                <button type="submit" class="w-full bg-mercury-gold text-black font-bold py-2 rounded-xl mt-4 transition-all hover:bg-mercury-steel">Сохранить изменения</button>
+   675	            </form>
+   676	        `);
+   677
+   678	        // Handle tank list interactivity
+   679	        const radioSome = document.getElementById("editTankAccessSome");
+   680	        const radioAll = document.getElementById("editTankAccessAll");
+   681	        const tankList = document.getElementById("editTankListCheckboxes");
+   682
+   683	        [radioSome, radioAll].forEach(r => r.addEventListener("change", () => {
+   684	            if (radioSome.checked) {
+   685	                tankList.classList.remove("opacity-50", "pointer-events-none");
+   686	            } else {
+   687	                tankList.classList.add("opacity-50", "pointer-events-none");
+   688	            }
+   689	        }));
+   690
+   691	        document.getElementById("editUserForm").addEventListener("submit", (e) => {
+   692	            e.preventDefault();
+   693	            const newUsername = document.getElementById("editUsername").value;
+   694
+   695	            // Check if username is changed and if new username exists
+   696	            if (newUsername !== u.username && users.some(user => user.username === newUsername)) {
+   697	                alert("Этот логин уже занят!");
+   698	                return;
+   699	            }
+   700
+   701	            const tankAccessType = document.querySelector("input[name='editTankAccess']:checked").value;
+   702	            let selectedTanks = "all";
+   703	            if (tankAccessType === "some") {
+   704	                selectedTanks = Array.from(document.querySelectorAll(".edit-tank-id-checkbox:checked")).map(cb => parseInt(cb.value));
+   705	            }
+   706
+   707	            // Update user object
+   708	            u.username = newUsername;
+   709	            u.password = document.getElementById("editPassword").value;
+   710	            u.firstName = document.getElementById("editFirstName").value;
+   711	            u.lastName = document.getElementById("editLastName").value;
+   712	            u.position = document.getElementById("editPosition").value;
+   713	            u.birthDate = document.getElementById("editBirthDate").value;
+   714	            u.cabinet = document.getElementById("editCabinet").value;
+   715	            u.permissions = {
+   716	                viewTanks: selectedTanks,
+   717	                canEditPrices: document.getElementById("editPermEditPrices").checked,
+   718	                canEditTanks: document.getElementById("editPermEditTanks").checked,
+   719	                canAddNews: document.getElementById("editPermAddNews").checked
+   720	            };
+   721
+   722	            localStorage.setItem("mercuryUsers", JSON.stringify(users));
+   723
+   724	            // Update currentUser if edited self
+   725	            if (currentUser.username === username) {
+   726	                currentUser = u;
+   727	                localStorage.setItem("mercuryUser", JSON.stringify(currentUser));
+   728	                renderHeader();
+   729	            }
+   730
+   731	            closeModal();
+   732	            openUsersListModal();
+   733	            alert("Пользователь успешно обновлен!");
+   734	        });
+   735	    }
+   736
+   737	    function saveTanks() {
+   738	        const inputs = document.querySelectorAll('input[data-tank-id]');
+   739	        inputs.forEach(input => {
+   740	            const id = parseInt(input.getAttribute('data-tank-id'));
+   741	            const val = parseInt(input.value);
+   742	            const tank = tanksData.find(t => t.id === id);
+   743	            if (tank) {
+   744	                tank.value = val;
+   745	            }
+   746	        });
+   747	        localStorage.setItem('mercuryTanks', JSON.stringify(tanksData));
+   748	        renderPage('tanks');
+   749	        alert('Данные успешно сохранены!');
+   750	    }
+   751
+   752	    function login(username, password) {
+   753	        const user = users.find(u => u.username === username && u.password === password);
+   754	        if (user) {
+   755	            currentUser = user;
+   756	            localStorage.setItem('mercuryUser', JSON.stringify(user));
+   757	            renderHeader();
+   758	            renderPage('home');
+   759	            return true;
+   760	        }
+   761	        return false;
+   762	    }
+   763
+   764	    let newsSortMode = 'newest';
+   765	    function formatDate(dateStr) { const d = new Date(dateStr); return `${d.getDate()} ${['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'][d.getMonth()]} ${d.getFullYear()}`; }
+   766	    function getSortedNews() {
+   767	        let arr = [...newsArchive];
+   768	        if (newsSortMode === 'newest') arr.sort((a,b) => new Date(b.date) - new Date(a.date));
+   769	        else if (newsSortMode === 'oldest') arr.sort((a,b) => new Date(a.date) - new Date(b.date));
+   770	        else arr.sort((a,b) => b.trending - a.trending);
+   771	        return arr;
+   772	    }
+   773
+   774
+   775	    function showFullNewsModal(id) {
+   776	        const item = newsArchive.find(n => n.id === id);
+   777	        if (!item) return;
+   778
+   779	        showModal(item.title, `
+   780	            <div class="space-y-4">
+   781	                <div class="rounded-2xl overflow-hidden h-48">
+   782	                    <img src="${item.img}" class="w-full h-full object-cover">
+   783	                </div>
+   784	                <div class="flex justify-between items-center">
+   785	                    <span class="text-xs text-mercury-cyan font-bold">${formatDate(item.date)}</span>
+   786	                    <span class="text-xs text-orange-400 font-bold">🔥 ${item.trending}</span>
+   787	                </div>
+   788	                <div class="text-mercury-cream leading-relaxed whitespace-pre-wrap">${item.content}</div>
+   789	            </div>
+   790	        `);
+   791	    }
+   792
+   793	    function renderHome() {
+   794	        const heroContent = window.heroVideoPlayed
+   795	            ? `<div class="relative z-10 text-center px-4">
+   796	                 <h1 class="text-4xl md:text-6xl font-extrabold text-mercury-gold tracking-tighter leading-none opacity-100">Smart Mercury Energy</h1>
+   797	               </div>`
+   798	            : `<video id="heroVideo" class="absolute inset-0 w-full h-full object-cover" autoplay muted playsinline>
+   799	                 <source src="video2.mp4" type="video/mp4">
+   800	               </video>
+   801	               <div id="videoOverlay" class="absolute inset-0 bg-black/40"></div>
+   802	               <div class="relative z-10 text-center px-4">
+   803	                 <h1 id="heroText" class="text-4xl md:text-6xl font-extrabold text-mercury-gold tracking-tighter leading-none opacity-0 transition-opacity duration-1000">Smart Mercury Energy</h1>
+   804	               </div>`;
+   805
+   806	        return `
+   807	            <div class="space-y-6">
+   808	                <div class="relative rounded-3xl overflow-hidden h-60 bg-black flex items-center justify-center">
+   809	                    ${heroContent}
+   810	                </div>
+   811
+   812	                <div class="glass-panel p-6 rounded-2xl">
+   813	                    <div class="text-center mb-4">
+   814	                        <h2 class="text-xl font-bold flex items-center justify-center gap-2 text-mercury-cyan">
+   815	                            <i class="fas fa-tags"></i> Топливные цены
+   816	                        </h2>
+   817	                        <p class="text-xs text-mercury-cream/60">Актуально на ${fuelPrices.updatedAt} ${(currentUser && (currentUser.role === "admin" || currentUser.permissions.canEditPrices)) ?
+   818	                            `<button id="editPricesBtn" class="text-[10px] text-mercury-cyan hover:underline ml-2"><i class="fas fa-edit"></i> Редактировать</button>` : ""}</p>
+   819	                    </div>
+   820	                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+   821	                        <div class="space-y-3">
+   822	                            <h3 class="text-sm font-bold text-mercury-gold flex items-center gap-2 border-b border-mercury-gold/20 pb-1">
+   823	                                <i class="fas fa-oil-can"></i> Дизельное топливо
+   824	                            </h3>
+   825	                            ${fuelPrices.diesel.map(item => `
+   826	                                <div class="flex justify-between items-center text-sm">
+   827	                                    <span class="text-mercury-cream">${item.location}</span>
+   828	                                    <span class="font-bold text-mercury-gold">${item.price}</span>
+   829	                                </div>
+   830	                            `).join('')}
+   831	                        </div>
+   832	                        <div class="space-y-3">
+   833	                            <h3 class="text-sm font-bold text-mercury-gold flex items-center gap-2 border-b border-mercury-gold/20 pb-1">
+   834	                                <i class="fas fa-gas-pump"></i> Авиатопливо и бензин
+   835	                            </h3>
+   836	                            ${fuelPrices.aviationAndPetrol.map(item => `
+   837	                                <div class="flex justify-between items-center text-sm">
+   838	                                    <span class="text-mercury-cream">${item.name}</span>
+   839	                                    <span class="font-bold text-mercury-gold">${item.price}</span>
+   840	                                </div>
+   841	                            `).join('')}
+   842	                        </div>
+   843	                    </div>
+   844	                </div>
+   845
+   846	                <div class="glass-panel p-6 rounded-2xl overflow-hidden">
+   847	                    <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
+   848	                        <h2 class="text-xl font-semibold text-mercury-gold flex items-center gap-3"><i class="fas fa-newspaper text-mercury-cyan mr-2"></i>Свежие новости ${(currentUser && (currentUser.role === "admin" || currentUser.permissions.canAddNews)) ?
+   849	                            `<button id="homeAddNewsBtn" class="bg-mercury-gold/20 text-mercury-gold px-3 py-1 rounded-full text-[10px] font-bold hover:bg-mercury-gold/30 transition-all">
+   850	                                <i class="fas fa-plus mr-1"></i> Добавить
+   851	                            </button>` : ""}</h2>
+   852	                        <div class="flex gap-2">
+   853	                             <button onclick="document.querySelector('.news-slider').scrollBy({left: -300, behavior: 'smooth'})" class="w-8 h-8 rounded-full bg-slate-.00 flex items-center justify-center hover:bg-mercury-gold/30 transition text-mercury-gold"><i class="fas fa-chevron-left text-xs"></i></button>
+   854	                             <button onclick="document.querySelector('.news-slider').scrollBy({left: 300, behavior: 'smooth'})" class="w-8 h-8 rounded-full bg-mercury-gold/20 flex items-center justify-center hover:bg-mercury-gold/30 transition text-mercury-gold"><i class="fas fa-chevron-right text-xs"></i></button>
+   855	                        </div>
+   856	                    </div>
+   857	                    <div class="news-slider">
+   858	                        ${getSortedNews().map(item => `
+   859	                            <div class="news-slide glass-card overflow-hidden bento-card relative group flex flex-col h-[320px]">
+   860	                                <div class="h-36 overflow-hidden">
+   861	                                    <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+   862	                                </div>
+   863	                                <div class="p-5 flex flex-col flex-grow">
+   864	                                    <div class="text-[9px] text-mercury-cyan font-bold mb-1.5 uppercase tracking-widest">${formatDate(item.date)}</div>
+   865	                                    <h3 class="font-extrabold text-sm mb-2 leading-tight group-hover:text-mercury-cyan transition-colors line-clamp-2 text-mercury-gold">${item.title}</h3>
+   866	                                    <p class="text-mercury-cream text-[11px] font-medium line-clamp-3 mb-3 leading-relaxed">${item.content}</p>
+   867	                                    <button onclick="showFullNewsModal(${item.id})" class="mt-auto text-[10px] text-mercury-cyan font-bold flex items-center gap-2 hover:gap-3 transition-all">
+   868	                                        ПОДРОБНЕЕ <i class="fas fa-arrow-right"></i>
+   869	                                    </button>
+   870	                                </div>
+   871	                            </div>
+   872	`).join('')}
+   873	                    </div>
+   874	                </div>
+   875	            </div>
+   876	        `;
+   877	    }
+   878
+   879
+   880	    function openEditPricesModal() {
+   881	        let dieselHtml = fuelPrices.diesel.map((item, idx) => `
+   882	            <div class="flex flex-col gap-1">
+   883	                <label class="text-[10px] text-mercury-cream/60">${item.location}</label>
+   884	                <input type="text" id="dieselPrice_${idx}" value="${item.price}" class="w-full bg-black/20 border border-mercury-gold/20 rounded-lg px-3 py-1.5 text-sm">
+   885	            </div>
+   886	        `).join("");
+   887
+   888	        let aviationHtml = fuelPrices.aviationAndPetrol.map((item, idx) => `
+   889	            <div class="flex flex-col gap-1">
+   890	                <label class="text-[10px] text-mercury-cream/60">${item.name}</label>
+   891	                <input type="text" id="aviationPrice_${idx}" value="${item.price}" class="w-full bg-black/20 border border-mercury-gold/20 rounded-lg px-3 py-1.5 text-sm">
+   892	            </div>
+   893	        `).join("");
+   894
+   895	        showModal("Редактировать цены", `
+   896	            <form id="editPricesForm" class="space-y-4">
+   897	                <div class="space-y-3">
+   898	                    <h4 class="text-xs font-bold text-mercury-gold border-b border-mercury-gold/10 pb-1">Дизельное топливо</h4>
+   899	                    ${dieselHtml}
+   900	                </div>
+   901	                <div class="space-y-3">
+   902	                    <h4 class="text-xs font-bold text-mercury-gold border-b border-mercury-gold/10 pb-1">Авиатопливо и бензин</h4>
+   903	                    ${aviationHtml}
+   904	                </div>
+   905	                <div>
+   906	                    <label class="block text-xs text-mercury-cream mb-1">Дата обновления</label>
+   907	                    <input type="text" id="pricesUpdatedAt" value="${fuelPrices.updatedAt}" class="w-full bg-black/20 border border-mercury-gold/20 rounded-lg px-3 py-1.5 text-sm">
+   908	                </div>
+   909	                <button type="submit" class="w-full bg-mercury-gold text-black font-bold py-2 rounded-xl mt-4">Сохранить</button>
+   910	            </form>
+   911	        `);
+   912
+   913	        document.getElementById("editPricesForm").addEventListener("submit", (e) => {
+   914	            e.preventDefault();
+   915	            fuelPrices.diesel.forEach((item, idx) => {
+   916	                item.price = document.getElementById(`dieselPrice_${idx}`).value;
+   917	            });
+   918	            fuelPrices.aviationAndPetrol.forEach((item, idx) => {
+   919	                item.price = document.getElementById(`aviationPrice_${idx}`).value;
+   920	            });
+   921	            fuelPrices.updatedAt = document.getElementById("pricesUpdatedAt").value;
+   922
+   923	            localStorage.setItem("mercuryPrices", JSON.stringify(fuelPrices));
+   924	            closeModal();
+   925	            renderPage("home");
+   926	        });
+   927	    }
+   928
+   929
+   930	    function renderTanksPage() {
+   931	        const canEdit = currentUser && (currentUser.role === "admin" || currentUser.permissions.canEditTanks);
+   932
+   933	        let filteredTanks = tanksData;
+   934	        if (currentUser && currentUser.role !== "admin") {
+   935	            const viewPerm = currentUser.permissions.viewTanks;
+   936	            if (viewPerm !== "all") {
+   937	                filteredTanks = tanksData.filter(t => viewPerm.includes(t.id));
+   938	            }
+   939	        }
+   940
+   941	        const tanksHtml = filteredTanks.map(tank => {
+   942	            const percentage = Math.round((tank.value / tank.max) * 100);
+   943	            return `
+   944	                <div class="tank glass-panel p-5 rounded-xl">
+   945	                    <div class="flex justify-between mb-2 text-mercury-gold">
+   946	                        <span class="font-semibold"><i class="fas fa-droplet mr-1"></i> ${tank.name}</span>
+   947	                        ${canEdit ?
+   948	                            `<input type="number" data-tank-id="${tank.id}" value="${tank.value}" class="w-24 bg-black/40 border border-mercury-gold/30 rounded px-2 text-xs text-right">` :
+   949	                            `<span class="text-sm text-mercury-cyan">${tank.value.toLocaleString()}</span>`
+   950	                        }
+   951	                    </div>
+   952	                    <div class="h-28 bg-black/20 rounded-xl overflow-hidden relative">
+   953	                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t ${tank.color} fuel-fill" style="height: ${percentage}%"></div>
+   954	                        <div class="absolute inset-0 flex items-center justify-center text-sm font-bold text-mercury-gold">${percentage}%</div>
+   955	                    </div>
+   956	                </div>
+   957	            `;
+   958	        }).join("");
+   959
+   960	        return `
+   961	            <div class="space-y-8">
+   962	                <div class="glass-panel p-6 rounded-2xl flex justify-between items-center flex-wrap gap-4">
+   963	                    <div>
+   964	                        <h2 class="text-2xl font-bold flex items-center gap-2 text-mercury-gold"><i class="fas fa-warehouse text-mercury-cyan"></i> Остатки топлива на нефтебазе</h2>
+   965	                        <p class="text-mercury-cream/60 text-sm mt-1">Актуальные данные: ${new Date().toLocaleDateString("ru-RU")}</p>
+   966	                    </div>
+   967	                    ${canEdit ? `<button id="saveTanksBtn" class="bg-mercury-gold text-black font-bold px-6 py-2 rounded-full hover:bg-mercury-steel transition-all">Сохранить изменения</button>` : ""}
+   968	                </div>
+   969	                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+   970	                    ${tanksHtml}
+   971	                </div>
+   972	                <div class="glass-panel p-6 rounded-2xl">
+   973	                    <h3 class="text-xl font-semibold mb-4 text-mercury-gold"><i class="fas fa-calculator text-emerald-400 mr-2"></i>Бернулли үлестірімі (n, p)</h3>
+   974	                    <div class="grid md:grid-cols-2 gap-5 mb-6">
+   975	                        <div><label class="block text-sm text-mercury-cream/60 mb-1">Сынақтар саны (n)</label><input type="number" id="bernoulliN" class="w-full bg-transparent border border-mercury-gold/20 rounded-xl px-4 py-2" value="10"></div>
+   976	                        <div><label class="block text-sm text-mercury-cream/60 mb-1">Табыс ықтималдығы (p)</label><input type="number" step="0.1" min="0" max="1" id="bernoulliP" class="w-full bg-transparent border border-mercury-gold/20 rounded-xl px-4 py-2" value="0.5"></div>
+   977	                    </div>
+   978	                    <div class="chart-container"><canvas id="bernoulliChart"></canvas></div>
+   979	                </div>
+   980	            </div>
+   981	        `;
+   982	    }
+   983	</span>
+   984	                        ${isAdmin ?
+   985	                            `<input type="number" data-tank-id="${tank.id}" value="${tank.value}" class="w-24 bg-black/40 border border-mercury-gold/30 rounded px-2 text-xs text-right">` :
+   986	                            `<span class="text-sm text-mercury-cyan">${tank.value.toLocaleString()}</span>`
+   987	                        }
+   988	                    </div>
+   989	                    <div class="h-28 bg-black/20 rounded-xl overflow-hidden relative">
+   990	                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t ${tank.color} fuel-fill" style="height: ${percentage}%"></div>
+   991	                        <div class="absolute inset-0 flex items-center justify-center text-sm font-bold text-mercury-gold">${percentage}%</div>
+   992	                    </div>
+   993	                </div>
+   994	            `;
+   995	        }).join('');
+   996
+   997	        return `
+   998	            <div class="space-y-8">
+   999	                <div class="glass-panel p-6 rounded-2xl flex justify-between items-center flex-wrap gap-4">
+  1000	                    <div>
+  1001	                        <h2 class="text-2xl font-bold flex items-center gap-2 text-mercury-gold"><i class="fas fa-warehouse text-mercury-cyan"></i> Остатки топлива на нефтебазе</h2>
+  1002	                        <p class="text-mercury-cream/60 text-sm mt-1">Актуальные данные: ${new Date().toLocaleDateString('ru-RU')}</p>
+  1003	                    </div>
+  1004	                    ${isAdmin ? `<button id="saveTanksBtn" class="bg-mercury-gold text-black font-bold px-6 py-2 rounded-full hover:bg-mercury-steel transition-all">Сохранить изменения</button>` : ''}
+  1005	                </div>
+  1006	                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+  1007	                    ${tanksHtml}
+  1008	                </div>
+  1009	                <div class="glass-panel p-6 rounded-2xl">
+  1010	                    <h3 class="text-xl font-semibold mb-4 text-mercury-gold"><i class="fas fa-calculator text-emerald-400 mr-2"></i>Бернулли үлестірімі (n, p)</h3>
+  1011	                    <div class="grid md:grid-cols-2 gap-5 mb-6">
+  1012	                        <div><label class="block text-sm text-mercury-cream/60 mb-1">Сынақтар саны (n)</label><input type="number" id="bernoulliN" class="w-full bg-transparent border border-mercury-gold/20 rounded-xl px-4 py-2" value="10"></div>
+  1013	                        <div><label class="block text-sm text-mercury-cream/60 mb-1">Табыс ықтималдығы (p)</label><input type="number" step="0.1" min="0" max="1" id="bernoulliP" class="w-full bg-transparent border border-mercury-gold/20 rounded-xl px-4 py-2" value="0.5"></div>
+  1014	                    </div>
+  1015	                    <div class="chart-container"><canvas id="bernoulliChart"></canvas></div>
+  1016	                </div>
+  1017	            </div>
+  1018	        `;
+  1019	    }
+  1020
+  1021	    function renderAboutPage() {
+  1022	        return `
+  1023	            <div class="space-y-6">
+  1024	                <div class="glass-panel p-8 rounded-2xl">
+  1025	                    <div class="text-center mb-8"><h1 class="text-5xl font-bold gradient-text">Mercury</h1><p class="text-mercury-cream mt-2 italic">From the endless steppes to the eternal sky</p></div>
+  1026	                    <div class="grid md:grid-cols-2 gap-8 items-center">
+  1027	                        <div><h2 class="text-2xl font-semibold text-mercury-cyan mb-4">О компании</h2><p class="text-mercury-cream leading-relaxed text-sm">Mercury — один из ведущих поставщиков авиационного топлива в Казахстане. Инфраструктура соответствует международным стандартам Joint Inspection Group (JIG 2).</p></div>
+  1028	                        <div class="rounded-2xl overflow-hidden shadow-lg"><img src="https://mercuryenergy.kz/22.jpg" class="w-full h-64 object-cover"></div>
+  1029	                    </div>
+  1030	                </div>
+  1031	                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+  1032	                    <div class="glass-panel p-6 text-center bento-card"><div class="text-3xl font-bold text-mercury-cyan mb-1">19 000</div><div class="text-[10px] text-mercury-cream/60 uppercase">м³ объём хранения</div></div>
+  1033	                    <div class="glass-panel p-6 text-center bento-card"><div class="text-3xl font-bold text-mercury-cyan mb-1">13</div><div class="text-[10px] text-mercury-cream/60 uppercase">резервуаров</div></div>
+  1034	                    <div class="glass-panel p-6 text-center bento-card"><div class="text-3xl font-bold text-mercury-cyan mb-1">2018</div><div class="text-[10px] text-mercury-cream/60 uppercase">год запуска</div></div>
+  1035	                    <div class="glass-panel p-6 text-center bento-card"><div class="text-3xl font-bold text-mercury-cyan mb-1">6 км</div><div class="text-[10px] text-mercury-cream/60 uppercase">до аэропорта</div></div>
+  1036	                </div>
+  1037	                <div class="glass-panel p-8 rounded-2xl">
+  1038	                    <h3 class="text-2xl font-semibold mb-8 text-center text-mercury-cyan">Руководство</h3>
+  1039	                    <div class="grid md:grid-cols-3 gap-8 text-mercury-gold">
+  1040	                        <div class="text-center"><div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-mercury-gold/20"><img src="https://mercuryenergy.kz/ssaya.jpeg" class="w-full h-full object-cover"></div><h4 class="font-bold">Максат Аканович</h4><p class="text-xs text-mercury-cream/60 mt-1">Генеральный директор</p></div>
+  1041	                        <div class="text-center"><div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-mercury-gold/20"><img src="https://mercuryenergy.kz/ttagatt.jpg" class="w-full h-full object-cover"></div><h4 class="font-bold">Талгат Тажибаев</h4><p class="text-xs text-mercury-cream/60 mt-1">Главный инженер</p></div>
+  1042	                        <div class="text-center"><div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-mercury-gold/20"><img src="https://mercuryenergy.kz/vvera.jpg" class="w-full h-full object-cover"></div><h4 class="font-bold">Вера Шашкова</h4><p class="text-xs text-mercury-cream/60 mt-1">Руководитель лаборатории</p></div>
+  1043	                    </div>
+  1044	                </div>
+  1045	            </div>
+  1046	        `;
+  1047	    }
+  1048
+  1049	    function renderNewsPage() {
+  1050	        let addNewsBtn = '';
+  1051	        if (currentUser && currentUser.role === 'admin') {
+  1052	            addNewsBtn = `
+  1053	                <button id="addNewsBtn" class="bg-mercury-gold text-black px-4 py-2 rounded-xl text-xs font-bold hover:bg-mercury-steel transition-all">
+  1054	                    <i class="fas fa-plus mr-1"></i> Добавить новость
+  1055	                </button>
+  1056	            `;
+  1057	        }
+  1058	        return `
+  1059	            <div class="space-y-6">
+  1060	                <div class="flex flex-wrap justify-between items-center gap-3 text-mercury-gold">
+  1061	                    <div class="flex items-center gap-4">
+  1062	                        <h2 class="text-2xl font-bold"><i class="fas fa-newspaper text-mercury-cyan mr-2"></i>Новости компании</h2>
+  1063	                        ${addNewsBtn}
+  1064	                    </div>
+  1065	                    <div class="flex gap-2 text-sm bg-black/20 p-1 rounded-full">
+  1066	                        <button data-news-sort="newest" class="sort-news-btn px-3 py-1 rounded-full ${newsSortMode === 'newest' ? 'bg-mercury-cyan text-white' : 'text-mercury-cream'}">Новые</button>
+  1067	                        <button data-news-sort="oldest" class="sort-news-btn px-3 py-1 rounded-full ${newsSortMode === 'oldest' ? 'bg-mercury-cyan text-white' : 'text-mercury-cream'}">Старые</button>
+  1068	                        <button data-news-sort="trending" class="sort-news-btn px-3 py-1 rounded-full ${newsSortMode === 'trending' ? 'bg-mercury-cyan text-white' : 'text-mercury-cream'}">Тренды</button>
+  1069	                    </div>
+  1070	                </div>
+  1071	                <div class="grid gap-6 md:grid-cols-2">
+  1072	                    ${getSortedNews().map(item => `
+  1073	                        <div class="glass-panel overflow-hidden bento-card flex flex-col"><div class="h-48 overflow-hidden"><img src="${item.img}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"></div><div class="p-5 flex flex-col flex-grow"><div class="flex justify-between items-center mb-3"><span class="text-[10px] bg-mercury-gold/20 text-mercury-cyan px-2 py-0.5 rounded-full uppercase tracking-tighter">📅 ${formatDate(item.date)}</span><span class="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full">🔥 ${item.trending}</span></div><h3 class="font-bold text-lg mb-2 leading-tight text-mercury-gold">${item.title}</h3><p class="text-mercury-cream text-sm line-clamp-3 mb-4">${item.content}</p></div></div>
+  1074	                    `).join('')}
+  1075	                </div>
+  1076	            </div>
+  1077	        `;
+  1078	    }
+  1079
+  1080	    function renderPricesPage() {
+  1081	        return `
+  1082	            <div class="space-y-6">
+  1083	                <h2 class="text-2xl font-bold text-center text-mercury-gold"><i class="fas fa-tags text-mercury-cyan mr-2"></i>Топливные цены</h2>
+  1084	                <p class="text-center text-mercury-cream/60">Актуально на ${fuelPrices.updatedAt}</p>
+  1085	                <div class="grid md:grid-cols-2 gap-5">
+  1086	                    <div class="glass-panel p-6 rounded-xl"><h3 class="text-xl font-semibold text-mercury-cyan mb-4"><i class="fas fa-oil-can mr-2"></i>Дизельное топливо</h3><div class="space-y-2">${fuelPrices.diesel.map(item => `<div class="flex justify-between py-2 border-b border-mercury-gold/10 text-mercury-cream"><span>${item.location}</span><span class="font-bold text-mercury-gold">${item.price}</span></div>`).join('')}</div></div>
+  1087	                    <div class="glass-panel p-6 rounded-xl"><h3 class="text-xl font-semibold text-mercury-gold mb-4"><i class="fas fa-gas-pump mr-2"></i>Авиатопливо и бензин</h3><div class="space-y-2">${fuelPrices.aviationAndPetrol.map(item => `<div class="flex justify-between py-2 border-b border-mercury-gold/10 text-mercury-cream"><span>${item.name}</span><span class="font-bold text-mercury-gold">${item.price}</span></div>`).join('')}</div></div>
+  1088	                </div>
+  1089	            </div>
+  1090	        `;
+  1091	    }
+  1092
+  1093
+  1094	    function renderProfilePage() {
+  1095	        if (!currentUser) return renderLoginPage();
+  1096
+  1097	        return `
+  1098	            <div class="max-w-4xl mx-auto space-y-6">
+  1099	                <div class="glass-panel p-8 rounded-2xl relative overflow-hidden">
+  1100	                    <div class="absolute top-0 right-0 w-32 h-32 bg-mercury-gold/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+  1101
+  1102	                    <div class="flex flex-col md:flex-row gap-8 items-center md:items-start relative z-10">
+  1103	                        <div class="flex flex-col items-center gap-4">
+  1104	                            <div class="w-40 h-40 rounded-2xl border-2 border-mercury-gold/30 overflow-hidden bg-black/40 flex items-center justify-center relative group">
+  1105	                                ${currentUser.photo ?
+  1106	                                    `<img src="${currentUser.photo}" class="w-full h-full object-cover">` :
+  1107	                                    `<i class="fas fa-user text-6xl text-mercury-gold/20"></i>`}
+  1108	                                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer" onclick="document.getElementById('profilePhotoInput').click()">
+  1109	                                    <i class="fas fa-camera text-white text-2xl"></i>
+  1110	                                </div>
+  1111	                            </div>
+  1112	                            <input type="file" id="profilePhotoInput" accept="image/*" class="hidden">
+  1113	                            <button onclick="document.getElementById('profilePhotoInput').click()" class="text-xs text-mercury-cyan hover:underline">Изменить фото</button>
+  1114	                        </div>
+  1115
+  1116	                        <div class="flex-grow space-y-4">
+  1117	                            <div class="flex justify-between items-start">
+  1118	                                <div>
+  1119	                                    <h2 class="text-3xl font-bold text-mercury-gold">${currentUser.firstName} ${currentUser.lastName}</h2>
+  1120	                                    <p class="text-mercury-cyan font-medium">${currentUser.position}</p>
+  1121	                                </div>
+  1122	                                <span class="bg-mercury-gold/10 text-mercury-gold px-3 py-1 rounded-full text-xs border border-mercury-gold/20">
+  1123	                                    ${currentUser.role === "admin" ? "Администратор" : "Сотрудник"}
+  1124	                                </span>
+  1125	                            </div>
+  1126
+  1127	                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+  1128	                                <div class="space-y-1">
+  1129	                                    <p class="text-[10px] text-mercury-cream/40 uppercase tracking-widest">Кабинет</p>
+  1130	                                    <p class="text-mercury-cream font-medium">${currentUser.cabinet || "Не указан"}</p>
+  1131	                                </div>
+  1132	                                <div class="space-y-1">
+  1133	                                    <p class="text-[10px] text-mercury-cream/40 uppercase tracking-widest">Дата рождения</p>
+  1134	                                    <p class="text-mercury-cream font-medium">${currentUser.birthDate || "Не указана"}</p>
+  1135	                                </div>
+  1136	                                <div class="space-y-1">
+  1137	                                    <p class="text-[10px] text-mercury-cream/40 uppercase tracking-widest">Логин</p>
+  1138	                                    <p class="text-mercury-cream font-medium">${currentUser.username}</p>
+  1139	                                </div>
+  1140	                            </div>
+  1141	                        </div>
+  1142	                    </div>
+  1143	                </div>
+  1144
+  1145	                <div class="grid md:grid-cols-2 gap-6">
+  1146	                    <div class="glass-panel p-6 rounded-2xl">
+  1147	                        <h3 class="text-lg font-bold text-mercury-gold mb-4 flex items-center gap-2">
+  1148	                            <i class="fas fa-key text-mercury-cyan"></i> Безопасность
+  1149	                        </h3>
+  1150	                        <form id="changePasswordForm" class="space-y-4">
+  1151	                            <div>
+  1152	                                <label class="block text-xs text-mercury-cream mb-1">Новый пароль</label>
+  1153	                                <input type="password" id="newProfilePassword" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+  1154	                            </div>
+  1155	                            <div>
+  1156	                                <label class="block text-xs text-mercury-cream mb-1">Подтвердите пароль</label>
+  1157	                                <input type="password" id="confirmProfilePassword" class="w-full bg-black/20 border border-mercury-gold/20 rounded-xl px-4 py-2" required>
+  1158	                            </div>
+  1159	                            <button type="submit" class="w-full bg-mercury-gold text-black font-bold py-2 rounded-xl transition-all hover:bg-mercury-steel">
+  1160	                                Обновить пароль
+  1161	                            </button>
+  1162	                        </form>
+  1163	                    </div>
+  1164
+  1165	                    <div class="glass-panel p-6 rounded-2xl">
+  1166	                        <h3 class="text-lg font-bold text-mercury-gold mb-4 flex items-center gap-2">
+  1167	                            <i class="fas fa-shield-alt text-mercury-cyan"></i> Ваши права доступа
+  1168	                        </h3>
+  1169	                        <div class="space-y-3">
+  1170	                            <div class="flex items-center justify-between text-sm">
+  1171	                                <span class="text-mercury-cream">Изменение цен</span>
+  1172	                                <i class="fas ${currentUser.permissions.canEditPrices ? "fa-check-circle text-emerald-500" : "fa-times-circle text-red-500"}"></i>
+  1173	                            </div>
+  1174	                            <div class="flex items-center justify-between text-sm">
+  1175	                                <span class="text-mercury-cream">Добавление новостей</span>
+  1176	                                <i class="fas ${currentUser.permissions.canAddNews ? "fa-check-circle text-emerald-500" : "fa-times-circle text-red-500"}"></i>
+  1177	                            </div>
+  1178	                            <div class="flex items-center justify-between text-sm">
+  1179	                                <span class="text-mercury-cream">Правка резервуаров</span>
+  1180	                                <i class="fas ${currentUser.permissions.canEditTanks ? "fa-check-circle text-emerald-500" : "fa-times-circle text-red-500"}"></i>
+  1181	                            </div>
+  1182	                            <div class="pt-2 border-t border-mercury-gold/10">
+  1183	                                <p class="text-xs text-mercury-cream/60">Доступ к резервуарам:</p>
+  1184	                                <p class="text-sm text-mercury-gold font-medium mt-1">
+  1185	                                    ${currentUser.permissions.viewTanks === "all" ? "Ко всем резервуарам" :
+  1186	                                      (currentUser.permissions.viewTanks.length > 0 ? `Резервуары: ${currentUser.permissions.viewTanks.join(", ")}` : "Нет доступа")}
+  1187	                                </p>
+  1188	                            </div>
+  1189	                        </div>
+  1190	                    </div>
+  1191	                </div>
+  1192	            </div>
+  1193	        `;
+  1194	    }
+  1195
+  1196	    function initProfileHandlers() {
+  1197	        document.getElementById('profilePhotoInput')?.addEventListener('change', (e) => {
+  1198	            const file = e.target.files[0];
+  1199	            if (file) {
+  1200	                const reader = new FileReader();
+  1201	                reader.onload = (event) => {
+  1202	                    currentUser.photo = event.target.result;
+  1203	                    const userIdx = users.findIndex(u => u.username === currentUser.username);
+  1204	                    if (userIdx !== -1) {
+  1205	                        users[userIdx].photo = event.target.result;
+  1206	                        localStorage.setItem('mercuryUsers', JSON.stringify(users));
+  1207	                        localStorage.setItem('mercuryUser', JSON.stringify(currentUser));
+  1208	                        renderPage('profile');
+  1209	                    }
+  1210	                };
+  1211	                reader.readAsDataURL(file);
+  1212	            }
+  1213	        });
+  1214
+  1215	        document.getElementById('changePasswordForm')?.addEventListener('submit', (e) => {
+  1216	            e.preventDefault();
+  1217	            const newPass = document.getElementById('newProfilePassword').value;
+  1218	            const confirmPass = document.getElementById('confirmProfilePassword').value;
+  1219
+  1220	            if (newPass !== confirmPass) {
+  1221	                alert('Пароли не совпадают!');
+  1222	                return;
+  1223	            }
+  1224
+  1225	            const userIdx = users.findIndex(u => u.username === currentUser.username);
+  1226	            if (userIdx !== -1) {
+  1227	                users[userIdx].password = newPass;
+  1228	                currentUser.password = newPass;
+  1229	                localStorage.setItem('mercuryUsers', JSON.stringify(users));
+  1230	                localStorage.setItem('mercuryUser', JSON.stringify(currentUser));
+  1231	                alert('Пароль успешно изменен!');
+  1232	                e.target.reset();
+  1233	            }
+  1234	        });
+  1235	    }
+  1236
+  1237	    function renderLoginPage() {
+  1238	        return `
+  1239	            <div class="max-w-md mx-auto glass-panel p-8 rounded-2xl">
+  1240	                <h2 class="text-3xl font-bold text-center text-mercury-gold mb-8">Вход в систему</h2>
+  1241	                <form id="loginForm" class="space-y-6">
+  1242	                    <div>
+  1243	                        <label class="block text-sm font-medium text-mercury-cream mb-2">Логин</label>
+  1244	                        <input type="text" id="username" class="w-full bg-black/30 border border-mercury-gold/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-mercury-gold" placeholder="Введите ваш логин" required>
+  1245	                    </div>
+  1246	                    <div>
+  1247	                        <label class="block text-sm font-medium text-mercury-cream mb-2">Пароль</label>
+  1248	                        <input type="password" id="password" class="w-full bg-black/30 border border-mercury-gold/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-mercury-gold" placeholder="••••••••" required>
+  1249	                    </div>
+  1250	                    <div id="loginError" class="text-red-400 text-sm hidden text-center">Неверный логин или пароль</div>
+  1251	                    <button type="submit" class="w-full bg-mercury-gold text-black font-bold py-3 rounded-xl hover:bg-mercury-steel transition-colors">
+  1252	                        Войти
+  1253	                    </button>
+  1254	                </form>
+  1255	            </div>
+  1256	        `;
+  1257	    }
+  1258
+  1259	    function renderContactsPage() {
+  1260	        return `
+  1261	            <div class="glass-panel p-8 rounded-2xl">
+  1262	                <div class="text-center mb-10"><h2 class="text-3xl font-bold gradient-text">Свяжитесь с нами</h2><p class="text-mercury-cream mt-2">Мы всегда на связи для решения ваших задач</p></div>
+  1263	                <div class="grid md:grid-cols-2 gap-10">
+  1264	                    <div class="space-y-6">
+  1265	                        <div class="flex items-start gap-4"><div class="w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0"><i class="fas fa-location-dot text-mercury-cyan"></i></div><div><h4 class="font-bold text-mercury-gold">Адрес нефтебазы</h4><p class="text-sm text-mercury-cream">г. Алматы, Турксибский район, ул. Свободная 136/2</p></div></div>
+  1266	                        <div class="flex items-start gap-4"><div class="w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0"><i class="fas fa-phone text-mercury-cyan"></i></div><div><h4 class="font-bold text-mercury-gold">Телефон</h4><a href="tel:+77273132596" class="text-sm text-mercury-cyan hover:underline">+7 (727) 313 25 96</a></div></div>
+  1267	                    </div>
+  1268	                    <div class="space-y-6 text-mercury-cream">
+  1269	                        <div class="flex items-start gap-4"><div class="w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0"><i class="fas fa-clock text-mercury-cyan"></i></div><div><h4 class="font-bold text-mercury-gold">Режим работы</h4><p class="text-sm">Круглосуточно, 24/7</p></div></div>
+  1270	                        <div class="bg-black/10 p-4 rounded-xl flex items-center gap-3"><i class="fas fa-plane-arrival text-mercury-cyan"></i><p class="text-xs">Расстояние до аэропорта Алматы — <span class="font-bold text-mercury-gold">6 км</span></p></div>
+  1271	                    </div>
+  1272	                </div>
+  1273	                <div class="mt-10 rounded-2xl overflow-hidden border border-mercury-gold/20 h-64 grayscale opacity-50 invert"><iframe src="https://yandex.kz/map-widget/v1/?ll=77.003968%2C43.348314&mode=search&oid=98395703974&ol=biz&z=14" width="100%" height="100%" frameborder="0"></iframe></div>
+  1274	            </div>
+  1275	        `;
+  1276	    }
+  1277
+  1278	    function initHeroVideo() {
+  1279	        const video = document.getElementById('heroVideo');
+  1280	        const heroText = document.getElementById('heroText');
+  1281	        if (!video || !heroText) return;
+  1282
+  1283	        video.addEventListener('timeupdate', () => {
+  1284	            if (video.currentTime > video.duration - 2) {
+  1285	                heroText.classList.remove('opacity-0');
+  1286	                heroText.classList.add('opacity-100');
+  1287	            }
+  1288	        });
+  1289
+  1290	        video.addEventListener('ended', () => {
+  1291	            window.heroVideoPlayed = true;
+  1292	            video.style.display = 'none';
+  1293	            const overlay = document.getElementById('videoOverlay');
+  1294	            if (overlay) overlay.style.display = 'none';
+  1295	            heroText.classList.remove('opacity-0');
+  1296	            heroText.classList.add('opacity-100');
+  1297	        });
+  1298	    }
+  1299
+  1300	    let bernoulliChart = null;
+  1301	    function initBernoulliChart() {
+  1302	        const ctx = document.getElementById('bernoulliChart')?.getContext('2d'); if (!ctx) return;
+  1303	        const n = parseInt(document.getElementById('bernoulliN').value) || 0; const p = parseFloat(document.getElementById('bernoulliP').value) || 0;
+  1304	        const k_vals = Array.from({length: n + 1}, (_, i) => i); const probs = k_vals.map(k => bernoulliProbability(n, k, p));
+  1305	        if (bernoulliChart) bernoulliChart.destroy();
+  1306	        bernoulliChart = new Chart(ctx, {
+  1307	            type: 'bar',
+  1308	            data: {
+  1309	                labels: k_vals,
+  1310	                datasets: [{
+  1311	                    label: `P(X=k)`,
+  1312	                    data: probs,
+  1313	                    backgroundColor: 'rgba(197, 160, 89, 0.6)',
+  1314	                    borderColor: 'rgba(197, 160, 89, 1)',
+  1315	                    borderWidth: 1
+  1316	                }]
+  1317	            },
+  1318	            options: {
+  1319	                responsive: true,
+  1320	                maintainAspectRatio: false,
+  1321	                scales: {
+  1322	                    y: {
+  1323	                        beginAtZero: true,
+  1324	                        grid: { color: 'rgba(197, 160, 89, 0.05)' },
+  1325	                        ticks: { color: '#dcd3c1' }
+  1326	                    },
+  1327	                    x: {
+  1328	                        grid: { display: false },
+  1329	                        ticks: { color: '#dcd3c1' }
+  1330	                    }
+  1331	                },
+  1332	                plugins: {
+  1333	                    legend: { labels: { color: '#c5a059' } }
+  1334	                }
+  1335	            }
+  1336	        });
+  1337	    }
+  1338
+  1339	    function renderPage(pageId) {
+  1340	        if (pageId === 'profile') {
+  1341	            content.innerHTML = renderProfilePage();
+  1342	            initProfileHandlers();
+  1343	            return;
+  1344	        }
+  1345
+  1346	        const content = document.getElementById('pageContent');
+  1347
+  1348	        if (pageId === 'tanks' && !currentUser) {
+  1349	            renderPage('login');
+  1350	            return;
+  1351	        }
+  1352
+  1353	        if (pageId === 'home') {
+  1354	            content.innerHTML = renderHome();
+  1355	            initHeroVideo();
+  1356	            document.getElementById('editPricesBtn')?.addEventListener('click', openEditPricesModal);
+  1357	            document.getElementById('homeAddNewsBtn')?.addEventListener('click', openAddNewsModal);
+  1358	        }
+  1359	        else if (pageId === 'tanks') {
+  1360	            content.innerHTML = renderTanksPage();
+  1361	            initBernoulliChart();
+  1362	            document.getElementById('bernoulliN')?.addEventListener('input', initBernoulliChart);
+  1363	            document.getElementById('bernoulliP')?.addEventListener('input', initBernoulliChart);
+  1364	            if (currentUser && currentUser.role === 'admin') {
+  1365	                document.getElementById('saveTanksBtn')?.addEventListener('click', saveTanks);
+  1366	            }
+  1367	        }
+  1368	        else if (pageId === 'about') content.innerHTML = renderAboutPage();
+  1369	        else if (pageId === 'news') {
+  1370	            content.innerHTML = renderNewsPage();
+  1371	            document.getElementById('addNewsBtn')?.addEventListener('click', openAddNewsModal);
+  1372	        }
+  1373	        else if (pageId === 'prices') content.innerHTML = renderPricesPage();
+  1374	        else if (pageId === 'contacts') content.innerHTML = renderContactsPage();
+  1375	        else if (pageId === 'login') {
+  1376	            content.innerHTML = renderLoginPage();
+  1377	            document.getElementById('loginForm')?.addEventListener('submit', (e) => {
+  1378	                e.preventDefault();
+  1379	                const u = document.getElementById('username').value;
+  1380	                const p = document.getElementById('password').value;
+  1381	                if (!login(u, p)) {
+  1382	                    document.getElementById('loginError').classList.remove('hidden');
+  1383	                }
+  1384	            });
+  1385	        }
+  1386	        window.scrollTo({ top: 0, behavior: 'smooth' });
+  1387	    }
+  1388
+  1389	    document.addEventListener('click', (e) => {
+  1390	        const navBtn = e.target.closest('[data-nav], .nav-page-btn');
+  1391	        if (navBtn) {
+  1392	            e.preventDefault();
+  1393	            const target = navBtn.getAttribute('data-nav');
+  1394	            if (target) renderPage(target);
+  1395	        }
+  1396
+  1397	        const sortBtn = e.target.closest('[data-news-sort]');
+  1398	        if (sortBtn) {
+  1399	            newsSortMode = sortBtn.getAttribute('data-news-sort');
+  1400	            renderPage('news');
+  1401	        }
+  1402	    });
+  1403
+  1404	    renderHeader();
+  1405	    renderPage('home');
+  1406	</script>
+  1407	</body>
+  1408	</html>
