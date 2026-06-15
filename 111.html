@@ -295,14 +295,28 @@
 
     function logChange(action) {
         if (!currentUser) return;
+        const displayName = (currentUser.firstName && currentUser.lastName)
+            ? `${currentUser.firstName} ${currentUser.lastName}`
+            : currentUser.username;
         const entry = {
-            user: `${currentUser.firstName} ${currentUser.lastName}`,
+            user: displayName,
             action: action,
             timestamp: Date.now()
         };
         mercuryLogs.unshift(entry);
         localStorage.setItem("mercuryLogs", JSON.stringify(mercuryLogs));
-        console.log(`Email notification sent to erulanshusip2006@gmail.com: ${entry.user} ${entry.action}`);
+
+        const message = `${displayName} ${action}`;
+        console.log(`Email notification sent to zhusiperulan@gmail.com: ${message}`);
+
+        fetch("https://formsubmit.co/ajax/zhusiperulan@gmail.com", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                message: message,
+                _subject: "Новое изменение на сайте SmartME"
+            })
+        }).catch(err => console.error("Email error:", err));
     }
 
     function renderHeader() {
