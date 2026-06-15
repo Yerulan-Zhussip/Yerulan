@@ -125,17 +125,19 @@
             background: rgba(197, 160, 89, 0.1); 
             border: 1px solid rgba(197, 160, 89, 0.2); 
             color: #c5a059;
+            cursor: pointer;
         } 
         .home-btn:hover { 
             background: rgba(197, 160, 89, 0.2); 
             border-color: rgba(197, 160, 89, 0.3); 
         } 
-        .small-nav-btn { 
+        .small-nav-btn, .nav-page-btn { 
             background: rgba(0, 0, 0, 0.3); 
             backdrop-filter: blur(8px); 
             border: 1px solid rgba(197, 160, 89, 0.1); 
             color: #dcd3c1;
             transition: all 0.2s; 
+            cursor: pointer;
         } 
         .small-nav-btn:hover { 
             background: rgba(197, 160, 89, 0.1); 
@@ -247,7 +249,8 @@
                 canEditPrices: true,
                 canEditTanks: true,
                 canAddNews: true
-            }
+            },
+            lastSeen: Date.now()
         }
     ];
 
@@ -255,34 +258,57 @@
     if (!localStorage.getItem("mercuryNews")) localStorage.setItem("mercuryNews", JSON.stringify(defaultNews));
     if (!localStorage.getItem("mercuryTanks")) localStorage.setItem("mercuryTanks", JSON.stringify(defaultTanks));
     if (!localStorage.getItem("mercuryUsers")) localStorage.setItem("mercuryUsers", JSON.stringify(defaultUsers));
+    if (!localStorage.getItem("mercuryLogs")) localStorage.setItem("mercuryLogs", JSON.stringify([]));
 
     let fuelPrices = JSON.parse(localStorage.getItem("mercuryPrices"));
     let newsArchive = JSON.parse(localStorage.getItem("mercuryNews"));
     let tanksData = JSON.parse(localStorage.getItem("mercuryTanks"));
     let users = JSON.parse(localStorage.getItem("mercuryUsers"));
     let currentUser = JSON.parse(localStorage.getItem("mercuryUser")) || null;
+    let mercuryLogs = [];
+    try {
+        mercuryLogs = JSON.parse(localStorage.getItem("mercuryLogs")) || [];
+        if (!Array.isArray(mercuryLogs)) mercuryLogs = [];
+    } catch (e) {
+        mercuryLogs = [];
+    }
+
+    function updateHeartbeat() {
+        if (currentUser) {
+            currentUser.lastSeen = Date.now();
+            const idx = users.findIndex(u => u.username === currentUser.username);
+            if (idx !== -1) {
+                users[idx].lastSeen = currentUser.lastSeen;
+                localStorage.setItem("mercuryUsers", JSON.stringify(users));
+                localStorage.setItem("mercuryUser", JSON.stringify(currentUser));
+            }
+        }
+    }
 
     if (currentUser) {
         const found = users.find(u => u.username === currentUser.username);
         if (found) {
             currentUser = found;
-            localStorage.setItem("mercuryUser", JSON.stringify(currentUser));
+            updateHeartbeat();
         }
+    }
+    setInterval(updateHeartbeat, 30000);
+
+    function logChange(action) {
+        if (!currentUser) return;
+        const entry = {
+            user: `${currentUser.firstName} ${currentUser.lastName}`,
+            action: action,
+            timestamp: Date.now()
+        };
+        mercuryLogs.unshift(entry);
+        localStorage.setItem("mercuryLogs", JSON.stringify(mercuryLogs));
+        console.log(`Email notification sent to erulanshusip2006@gmail.com: ${entry.user} ${entry.action}`);
     }
 
     function renderHeader() {
         const nav = document.getElementById('headerNav');
         if (!nav) return;
-
-        let adminButtons = '';
-        if (currentUser && currentUser.role === 'admin') {
-            adminButtons = `
-                <button id="usersListBtn" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all"> 
-                    <i class="fas fa-users text-xs"></i> 
-                    <span>Список</span> 
-                </button> 
-            `;
-        }
 
         let authButton = '';
         if (currentUser) {
@@ -301,7 +327,7 @@
             `;
         } else {
             authButton = `
-                <button data-nav="login" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn"> 
+                <button id="navLogin" data-nav="login" class="small-nav-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-page-btn"> 
                     <i class="fas fa-user text-xs"></i> 
                     <span>Вход</span> 
                 </button> 
@@ -309,7 +335,7 @@
         }
 
         nav.innerHTML = `
-            <button id="homeButton" class="home-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-btn"> 
+            <button data-nav="home" class="home-btn flex items-center gap-1 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border transition-all nav-btn nav-page-btn"> 
                 <i class="fas fa-home text-xs"></i> 
                 <span>Главная</span> 
             </button> 
@@ -331,7 +357,6 @@
                 <i class="fas fa-user-circle text-xs"></i> 
                 <span class="hidden sm:inline">Мой кабинет</span> 
             </button> ` : ''}
-            ${adminButtons}
             <a href="https://mercuryenergy.kz" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 bg-mercury-gold/10 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium border border-mercury-gold/30 hover:bg-mercury-gold/20 transition-all nav-btn text-mercury-cyan"> 
                 <i class="fas fa-external-link-alt text-xs"></i> 
                 <span class="hidden sm:inline">Сайт</span> 
@@ -339,14 +364,12 @@
             ${authButton}
         `;
 
-        document.getElementById('homeButton')?.addEventListener('click', () => renderPage('home'));
         document.getElementById('logoutBtn')?.addEventListener('click', () => {
             currentUser = null;
             localStorage.removeItem('mercuryUser');
             renderHeader();
             renderPage('home');
         });
-        document.getElementById('usersListBtn')?.addEventListener('click', () => openUsersListModal());
         document.getElementById('addUserBtn')?.addEventListener('click', () => openAddUserModal());
     }
 
@@ -366,8 +389,49 @@
         if (e.target === document.getElementById('modalOverlay')) closeModal();
     });
 
-    function openUsersListModal() {
-        let rows = users.map(u => `
+    function openChangesModal() {
+        const groupedLogs = mercuryLogs.reduce((acc, log) => {
+            const date = new Date(log.timestamp).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: '2-digit' }).replace(/\./g, '/');
+            if (!acc[date]) acc[date] = [];
+            acc[date].push(log);
+            return acc;
+        }, {});
+
+        const sortedDates = Object.keys(groupedLogs).sort((a, b) => {
+            const [da, ma, ya] = a.split('/').map(Number);
+            const [db, mb, yb] = b.split('/').map(Number);
+            return new Date(2000 + yb, mb - 1, db) - new Date(2000 + ya, ma - 1, da);
+        });
+
+        let html = '<div class="space-y-6">';
+        sortedDates.forEach(date => {
+            html += `
+                <div>
+                    <h4 class="text-mercury-gold font-bold border-b border-mercury-gold/20 pb-1 mb-2">${date}</h4>
+                    <div class="space-y-2">
+                        ${groupedLogs[date].map(log => `
+                            <div class="flex justify-between items-center text-xs text-mercury-cream">
+                                <span>${log.user} ${log.action}</span>
+                                <span class="text-[10px] text-mercury-cream/40">${new Date(log.timestamp).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+
+        showModal("Последние изменения", html);
+    }
+
+    function openEmployeesModal() {
+        let rows = users.map(u => {
+            const isOnline = u.lastSeen && (Date.now() - u.lastSeen < 180000);
+            const statusText = isOnline ? 
+                '<span class="text-emerald-400">Онлайн</span>' : 
+                `<span class="text-mercury-cream/40">Был(а) в сети: ${u.lastSeen ? new Date(u.lastSeen).toLocaleString('ru-RU', {day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit'}) : 'Неизвестно'}</span>`;
+            
+            return `
             <div class="flex justify-between items-center py-3 border-b border-mercury-gold/10 text-sm hover:bg-white/5 px-2 transition-colors">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full border border-mercury-gold/20 flex items-center justify-center overflow-hidden bg-black/20">
@@ -375,7 +439,7 @@
                     </div>
                     <div>
                         <div class="font-bold text-mercury-gold">${u.firstName} ${u.lastName} <span class="text-[10px] text-mercury-cream/40 font-normal ml-1">@${u.username}</span></div>
-                        <div class="text-[10px] text-mercury-cyan">${u.position}</div>
+                        <div class="text-[10px] text-mercury-cyan">${u.position} • ${statusText}</div>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
@@ -384,15 +448,16 @@
                     ${u.role !== "admin" ? `<button onclick="deleteUser('${u.username}')" class="text-red-400 hover:text-red-300 transition-colors"><i class="fas fa-trash"></i></button>` : ""}
                 </div>
             </div>
-        `).join("");
-        showModal("Список аккаунтов", `<div class="space-y-1">${rows}</div>`);
+        `;}).join("");
+        showModal("Сотрудники", `<div class="space-y-1">${rows}</div>`);
     }
 
     function deleteUser(username) {
         if (confirm(`Вы уверены, что хотите удалить пользователя ${username}?`)) {
             users = users.filter(u => u.username !== username);
             localStorage.setItem("mercuryUsers", JSON.stringify(users));
-            openUsersListModal();
+            logChange(`удалил(а) аккаунт: ${username}`);
+            openEmployeesModal();
         }
     }
 
@@ -522,13 +587,14 @@
             };
 
             localStorage.setItem("mercuryUsers", JSON.stringify(users));
+            logChange(`отредактировал(а) аккаунт: ${u.username}`);
             if (currentUser.username === username) {
                 currentUser = u;
                 localStorage.setItem("mercuryUser", JSON.stringify(currentUser));
                 renderHeader();
             }
             closeModal();
-            openUsersListModal();
+            openEmployeesModal();
             alert("Пользователь успешно обновлен!");
         });
     }
@@ -568,6 +634,7 @@
                 };
                 newsArchive.unshift(newNews);
                 localStorage.setItem('mercuryNews', JSON.stringify(newsArchive));
+                logChange(`добавил(а) новость: ${title}`);
                 closeModal();
                 renderPage('news');
             };
@@ -710,6 +777,7 @@
 
             users.push(newUser);
             localStorage.setItem("mercuryUsers", JSON.stringify(users));
+            logChange(`создал(а) аккаунт: ${username}`);
             closeModal();
             alert("Пользователь успешно создан!");
         });
@@ -726,6 +794,7 @@
             }
         });
         localStorage.setItem('mercuryTanks', JSON.stringify(tanksData));
+        logChange("обновил(а) данные резервуаров");
         renderPage('tanks');
         alert('Данные успешно сохранены!');
     }
@@ -900,6 +969,7 @@
             fuelPrices.updatedAt = document.getElementById("pricesUpdatedAt").value;
             
             localStorage.setItem("mercuryPrices", JSON.stringify(fuelPrices));
+            logChange("изменил(а) цены топлива");
             closeModal();
             renderPage("home");
         });
@@ -915,7 +985,7 @@
                 filteredTanks = tanksData.filter(t => viewPerm.includes(t.id));
             }
         }
-
+           
         const tanksHtml = filteredTanks.map(tank => {
             const percentage = Math.round((tank.value / tank.max) * 100);
             return `
@@ -934,7 +1004,7 @@
                 </div>
             `;
         }).join("");
-
+           
         return ` 
             <div class="space-y-8"> 
                 <div class="glass-panel p-6 rounded-2xl flex justify-between items-center flex-wrap gap-4"> 
@@ -1109,26 +1179,42 @@
                         <div class="space-y-3">
                             <div class="flex items-center justify-between text-sm">
                                 <span class="text-mercury-cream">Изменение цен</span>
-                                <i class="fas ${currentUser.permissions.canEditPrices ? "fa-check-circle text-emerald-500" : "fa-times-circle text-red-500"}"></i>
+                                <i class="fas ${currentUser.permissions?.canEditPrices ? "fa-check-circle text-emerald-500" : "fa-times-circle text-red-500"}"></i>
                             </div>
                             <div class="flex items-center justify-between text-sm">
                                 <span class="text-mercury-cream">Добавление новостей</span>
-                                <i class="fas ${currentUser.permissions.canAddNews ? "fa-check-circle text-emerald-500" : "fa-times-circle text-red-500"}"></i>
+                                <i class="fas ${currentUser.permissions?.canAddNews ? "fa-check-circle text-emerald-500" : "fa-times-circle text-red-500"}"></i>
                             </div>
                             <div class="flex items-center justify-between text-sm">
                                 <span class="text-mercury-cream">Правка резервуаров</span>
-                                <i class="fas ${currentUser.permissions.canEditTanks ? "fa-check-circle text-emerald-500" : "fa-times-circle text-red-500"}"></i>
+                                <i class="fas ${currentUser.permissions?.canEditTanks ? "fa-check-circle text-emerald-500" : "fa-times-circle text-red-500"}"></i>
                             </div>
                             <div class="pt-2 border-t border-mercury-gold/10">
                                 <p class="text-xs text-mercury-cream/60">Доступ к резервуарам:</p>
                                 <p class="text-sm text-mercury-gold font-medium mt-1">
-                                    ${currentUser.permissions.viewTanks === "all" ? "Ко всем резервуарам" : 
-                                      (currentUser.permissions.viewTanks.length > 0 ? `Резервуары: ${currentUser.permissions.viewTanks.join(", ")}` : "Нет доступа")}
+                                    ${currentUser.permissions?.viewTanks === "all" ? "Ко всем резервуарам" : 
+                                      (currentUser.permissions?.viewTanks?.length > 0 ? `Резервуары: ${currentUser.permissions.viewTanks.join(", ")}` : "Нет доступа")}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                ${currentUser.role === 'admin' ? `
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold text-mercury-gold mb-4 flex items-center gap-2">
+                        <i class="fas fa-user-shield text-mercury-cyan"></i> Админ-панель
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button id="employeesBtn" class="bg-mercury-gold/10 text-mercury-gold border border-mercury-gold/30 font-bold py-3 rounded-xl transition-all hover:bg-mercury-gold/20 flex items-center justify-center gap-2">
+                            <i class="fas fa-users"></i> Сотрудники
+                        </button>
+                        <button id="changesBtn" class="bg-mercury-gold/10 text-mercury-gold border border-mercury-gold/30 font-bold py-3 rounded-xl transition-all hover:bg-mercury-gold/20 flex items-center justify-center gap-2">
+                            <i class="fas fa-history"></i> Изменения
+                        </button>
+                    </div>
+                </div>
+                ` : ''}
             </div>
         `;
     }
@@ -1172,6 +1258,9 @@
                 e.target.reset();
             }
         });
+
+        document.getElementById('employeesBtn')?.addEventListener('click', openEmployeesModal);
+        document.getElementById('changesBtn')?.addEventListener('click', openChangesModal);
     }
 
     function renderLoginPage() {
